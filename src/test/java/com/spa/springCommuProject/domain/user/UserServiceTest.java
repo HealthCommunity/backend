@@ -1,5 +1,8 @@
 package com.spa.springCommuProject.domain.user;
 
+import com.spa.springCommuProject.user.domain.User;
+import com.spa.springCommuProject.user.repository.UserRepository;
+import com.spa.springCommuProject.user.service.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,14 +10,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @SpringBootTest
 @Transactional
 class UserServiceTest {
 
-    @Autowired UserService userService;
-    @Autowired UserRepository userRepository;
+    @Autowired
+    UserService userService;
+    @Autowired
+    UserRepository userRepository;
 
     @Test
     @Rollback(value = false)

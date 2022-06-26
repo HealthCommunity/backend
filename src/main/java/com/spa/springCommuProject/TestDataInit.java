@@ -1,7 +1,7 @@
 package com.spa.springCommuProject;
 
-import com.spa.springCommuProject.domain.post.service.PostService;
-import com.spa.springCommuProject.domain.user.UserService;
+import com.spa.springCommuProject.posts.service.PostService;
+import com.spa.springCommuProject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
