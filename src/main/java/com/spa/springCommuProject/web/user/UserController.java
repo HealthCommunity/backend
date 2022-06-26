@@ -4,6 +4,7 @@ package com.spa.springCommuProject.web.user;
 import com.spa.springCommuProject.domain.user.BigThreePower;
 import com.spa.springCommuProject.domain.user.User;
 import com.spa.springCommuProject.domain.user.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user")
+    @ApiOperation(value = "회원가입폼")
     public String joinForm(UserJoinDTO userJoinDTO){
         log.info("joinForm");
         return "/user/joinForm";
@@ -123,7 +125,7 @@ public class UserController {
 
         model.addAttribute("userUpdateDTO", userUpdateDTO);
         model.addAttribute("userId", userId);
-        return "user/updateForm";
+        return "/user/updateForm";
     }
 
     @PostMapping("/user/{userId}/edit")

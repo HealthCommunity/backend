@@ -8,6 +8,9 @@ spring:
     multipart:
       maxFileSize: 1000MB
       maxRequestSize: 2000MB
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
   jpa:
     hibernate:
@@ -31,3 +34,4 @@ image:
 
 video:
   dir: C:/Users/spa89/Downloads/develop/springCommuProject/file/video/
+
