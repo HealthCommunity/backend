@@ -1,9 +1,4 @@
 spring:
-  datasource:
-    url: jdbc:h2:tcp://localhost/~/community;
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
   servlet:
     multipart:
       maxFileSize: 1000MB
@@ -11,6 +6,11 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  profiles:
+    group:
+      "local": "testdb,common"
+      "dev": "testdb,common"
+      "prod": "proddb,common"
 
   jpa:
     hibernate:
@@ -21,7 +21,7 @@ spring:
 
 logging:
   level:
-    org.hibernate.SQL: debug
+    org.hibernate.SQL: error
 
 server:
   servlet:
@@ -34,4 +34,27 @@ image:
 
 video:
   dir: C:/Users/spa89/Downloads/develop/springCommuProject/file/video/
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "proddb"
+  datasource:
+    url: jdbc:mysql://localhost:3306/testDB?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: "root"
+    password: "root"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "testdb"
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
 
