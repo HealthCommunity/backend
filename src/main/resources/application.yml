@@ -14,7 +14,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -29,11 +29,7 @@ server:
       timeout: 30m
       tracking-modes: cookie
 
-image:
-  dir: C:/Users/spa89/Downloads/develop/springCommuProject/file/image/
 
-video:
-  dir: C:/Users/spa89/Downloads/develop/springCommuProject/file/video/
 
 ---
 spring:
@@ -41,10 +37,16 @@ spring:
     activate:
       on-profile: "proddb"
   datasource:
-    url: jdbc:mysql://localhost:3306/testDB?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/post?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: "root"
     password: "root"
     driver-class-name: com.mysql.cj.jdbc.Driver
+
+image:
+  dir: /home/ubuntu/healthCommunity/image/
+
+video:
+  dir: /home/ubuntu/healthCommunity/video/
 
 ---
 
@@ -57,4 +59,10 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
+
+image:
+  dir: C:/Users/spa89/Downloads/develop/springCommuProject/file/image/
+
+video:
+  dir: C:/Users/spa89/Downloads/develop/springCommuProject/file/video/
 

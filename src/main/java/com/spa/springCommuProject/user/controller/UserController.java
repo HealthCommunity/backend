@@ -32,7 +32,7 @@ public class UserController {
     @ApiOperation(value = "회원가입폼")
     public String joinForm(UserJoinDTO userJoinDTO){
         log.info("joinForm");
-        return "/user/joinForm";
+        return "user/joinForm";
     }
 
     @PostMapping("/user")
@@ -42,7 +42,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             bindingResult.reject("joinFail", "잘못된 정보를 입력했습니다.");
             log.info("bindingError");
-            return "/user/joinForm";
+            return "user/joinForm";
         } //추가
 
         User user = new User(userJoinDTO.getNickName(),userJoinDTO.getLoginId(), userJoinDTO.getPassword());
@@ -62,7 +62,7 @@ public class UserController {
     @GetMapping("/login")
     public String loginForm(UserLoginDTO userLoginDTO){
         log.info("loginForm");
-        return "/user/loginForm";
+        return "user/loginForm";
     }
 
     @PostMapping("/login")
@@ -72,18 +72,18 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             bindingResult.reject("loginFail", "잘못된 정보를 입력했습니다.");
             log.info("bindingError");
-            return "/user/loginForm";
+            return "user/loginForm";
         } //폼에 잘못된 정보 들어왔을때
 
         User loginUser = userService.login(userLoginDTO.getLoginId(), userLoginDTO.getPassword());
 
         if (loginUser == null) {
             bindingResult.reject("loginFail", "아이디 또는 비밀번호가 맞지 않습니다.");
-            return "/user/loginForm";
+            return "user/loginForm";
         }
         if(loginUser.getAvailable()==false){
             bindingResult.reject("loginFail", "탈퇴된 회원입니다.");
-            return "/user/loginForm";
+            return "user/loginForm";
         }
         log.info("login username={}",loginUser.getLoginId());
         log.info("login userpassword={}",loginUser.getPassword());
@@ -128,7 +128,7 @@ public class UserController {
 
         model.addAttribute("userUpdateDTO", userUpdateDTO);
         model.addAttribute("userId", userId);
-        return "/user/updateForm";
+        return "user/updateForm";
     }
 
     @PostMapping("/user/{userId}/edit")
@@ -139,7 +139,7 @@ public class UserController {
         if (bindingResult.hasErrors()) {
             bindingResult.reject("updateFail", "잘못된 정보를 입력했습니다.");
             log.info("bindingError");
-            return "/user/updateForm";
+            return "user/updateForm";
         } //추가
 
         userService.updateUser(userId, userUpdateDTO.getNickName(), userUpdateDTO.getPassword());
