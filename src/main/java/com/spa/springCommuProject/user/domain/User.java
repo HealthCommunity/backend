@@ -1,11 +1,13 @@
 package com.spa.springCommuProject.user.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
 public class User {
 
     @Id
