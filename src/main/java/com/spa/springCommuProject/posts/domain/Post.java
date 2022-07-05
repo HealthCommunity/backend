@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.posts.domain;
 
+import com.spa.springCommuProject.posts.dto.FreePostDTO;
 import com.spa.springCommuProject.user.domain.User;
 import lombok.Getter;
 
@@ -65,5 +66,7 @@ public class Post {
         this.view++;
     }
 
-
+    public FreePostDTO convertToDto() {
+        return new FreePostDTO(title, content, createdDate, user);
+    }
 }
