@@ -1,6 +1,6 @@
 package com.spa.springCommuProject.user.controller;
 
-import com.spa.springCommuProject.posts.domain.Post;
+import com.spa.springCommuProject.posts.dto.FreePostDTO;
 import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -82,7 +82,7 @@ public class UserApi {
 
     @GetMapping("/{userId}/posts")
     @ApiOperation(value = "내 글 목록")
-    public ResponseEntity<List<Post>> myPostsList(@PathVariable Long userId) {
+    public ResponseEntity<List<FreePostDTO>> myPostsList(@PathVariable Long userId) {
         return new ResponseEntity<>(userService.findAllPostsByUserId(userId), HttpStatus.OK);
     }
 }
