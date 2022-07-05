@@ -30,13 +30,6 @@ public class PostRepository {
         return em.createQuery("select p from Post p", Post.class).getResultList().stream().filter(x->x.getAvailable()==true).collect(Collectors.toList());
     }
 
-    public List<Post> findAllPostsByUserId(Long userId){
-        return em.createQuery("select p from Post p where p.available = :available and " +
-                                                    "p.user.id = :userId order by p.createdDate desc")
-                .setParameter("available", true)
-                .setParameter("userId", userId)
-                .getResultList(); // 나중에 페이징 필요
-    }
 
     public List<PhotoPost> findAvailableAllPhotoPost(){
         return em.createQuery("select p from PhotoPost p", PhotoPost.class).getResultList().stream().filter(x->x.getAvailable()==true).collect(Collectors.toList());

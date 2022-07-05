@@ -33,9 +33,7 @@ public class PostService {
         return postRepository.findAvailableAll();
     }
 
-    public List<Post> findAllPostsByUserId(Long userId){
-        return postRepository.findAllPostsByUserId(userId);
-    }
+
 
     public List<FreePost> findAvailableFreePosts(){
         return postRepository.findAvailableAllFreePosts();

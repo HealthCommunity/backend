@@ -1,7 +1,6 @@
 package com.spa.springCommuProject.user.controller;
 
 import com.spa.springCommuProject.posts.domain.Post;
-import com.spa.springCommuProject.posts.service.PostService;
 import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +19,6 @@ import java.util.List;
 public class UserApi {
 
     private final UserService userService;
-    private final PostService postService;
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입")
@@ -85,7 +83,6 @@ public class UserApi {
     @GetMapping("/{userId}/posts")
     @ApiOperation(value = "내 글 목록")
     public ResponseEntity<List<Post>> myPostsList(@PathVariable Long userId) {
-
-        return new ResponseEntity<>(postService.findAllPostsByUserId(userId),HttpStatus.OK);
+        return new ResponseEntity<>(userService.findAllPostsByUserId(userId), HttpStatus.OK);
     }
 }

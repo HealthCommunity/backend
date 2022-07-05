@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.user.service;
 
+import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.user.domain.BigThreePower;
 import com.spa.springCommuProject.user.domain.Role;
 import com.spa.springCommuProject.user.domain.User;
@@ -54,6 +55,10 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User findById(Long userId){
+        return userRepository.findById(userId);
+    }
+
     public UserIdDto findLoginIdById(Long userId){
         User findUser = userRepository.findById(userId);
         UserIdDto userIdDto = new UserIdDto(findUser.getLoginId());
@@ -71,6 +76,11 @@ public class UserService {
         User findUser = userRepository.findById(userId);
         UserUpdateDto userUpdateDTO = new UserUpdateDto(findUser.getNickName(), findUser.getPassword());
         return userUpdateDTO;
+    }
+
+    public List<Post> findAllPostsByUserId(Long userId){
+        User user = userRepository.findById(userId);
+        return userRepository.findAllPostsByUserId(user);
     }
 
 

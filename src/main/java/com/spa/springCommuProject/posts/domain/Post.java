@@ -56,6 +56,7 @@ public class Post {
         this.modifiedDate = LocalDateTime.parse(nowTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
+
     public void delete(){
         this.available = false;
     }

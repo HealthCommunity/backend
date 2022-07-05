@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.user.repository;
 
+import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,8 @@ public class UserRepository {
         return em.find(User.class, id);
     }
 
+
+
     public List<User> findAll(){
         return em.createQuery("select u from User u", User.class).getResultList();
     }
@@ -43,5 +46,13 @@ public class UserRepository {
                 .setFirstResult(0)
                 .setMaxResults(10)
                 .getResultList();
+    }
+
+    public List<Post> findAllPostsByUserId(User user){
+        return em.createQuery("select p from Post p where p.available = :available and " +
+                        "p.user = :user order by p.createdDate desc", Post.class)
+                .setParameter("available", true)
+                .setParameter("user", user)
+                .getResultList(); // 나중에 페이징 필요
     }
 }

@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.user.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Builder
+@AllArgsConstructor
 public class User {
 
     @Id
