@@ -1,6 +1,6 @@
 package com.spa.springCommuProject.user.controller;
 
-import com.spa.springCommuProject.posts.dto.FreePostDTO;
+import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -22,24 +22,24 @@ public class UserApi {
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<UserJoinDto> join(UserJoinDto userJoinDTO) {
-        UserJoinDto responseDto = userService.join(userJoinDTO);
+    public ResponseEntity<UserJoinDTO> join(UserJoinDTO userJoinDTO) {
+        UserJoinDTO responseDto = userService.join(userJoinDTO);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인")
-    public ResponseEntity<UserLoginDto> login(UserLoginDto userLoginDTO){
-        UserLoginDto loginDTO = userService.login(userLoginDTO);
+    public ResponseEntity<UserLoginDTO> login(UserLoginDTO userLoginDTO){
+        UserLoginDTO loginDTO = userService.login(userLoginDTO);
 
         return new ResponseEntity<>(loginDTO, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}")
     @ApiOperation(value = "마이페이지")
-    public ResponseEntity<UserPageDto> myPage(@PathVariable Long userId){
+    public ResponseEntity<UserPageDTO> myPage(@PathVariable Long userId){
 
-        UserPageDto userPageDto = userService.findPageById(userId);
+        UserPageDTO userPageDto = userService.findPageById(userId);
 
         return new ResponseEntity<>(userPageDto, HttpStatus.OK);
 
@@ -47,16 +47,16 @@ public class UserApi {
 
     @GetMapping("/{userId}/edit")
     @ApiOperation(value = "내 정보 수정 폼")
-    public ResponseEntity<UserUpdateDto> editForm(@PathVariable Long userId) {
+    public ResponseEntity<UserUpdateDTO> editForm(@PathVariable Long userId) {
 
-        UserUpdateDto userUpdateDTO = userService.findUpdateById(userId);
+        UserUpdateDTO userUpdateDTO = userService.findUpdateById(userId);
 
         return new ResponseEntity<>(userUpdateDTO, HttpStatus.OK);
     }
 
     @PostMapping("/{userId}/edit")
     @ApiOperation(value = "내 정보 수정")
-    public ResponseEntity<UserUpdateDto> edit(@PathVariable Long userId, UserUpdateDto userUpdateDTO) {
+    public ResponseEntity<UserUpdateDTO> edit(@PathVariable Long userId, UserUpdateDTO userUpdateDTO) {
 
         userService.updateUser(userId, userUpdateDTO);
 
@@ -65,8 +65,8 @@ public class UserApi {
 
     @GetMapping("/{userId}/delete")
     @ApiOperation(value = "회원 탈퇴 폼")
-    public ResponseEntity<UserIdDto> deleteForm(@PathVariable Long userId) {
-        UserIdDto userIdDto = userService.findLoginIdById(userId);
+    public ResponseEntity<UserIdDTO> deleteForm(@PathVariable Long userId) {
+        UserIdDTO userIdDto = userService.findLoginIdById(userId);
 
         return new ResponseEntity<>(userIdDto,HttpStatus.OK);
     }
@@ -82,7 +82,7 @@ public class UserApi {
 
     @GetMapping("/{userId}/posts")
     @ApiOperation(value = "내 글 목록")
-    public ResponseEntity<List<FreePostDTO>> myPostsList(@PathVariable Long userId) {
+    public ResponseEntity<List<PostDTO>> myPostsList(@PathVariable Long userId) {
         return new ResponseEntity<>(userService.findAllPostsByUserId(userId), HttpStatus.OK);
     }
 }

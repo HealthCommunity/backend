@@ -1,17 +1,19 @@
 package com.spa.springCommuProject.posts.domain;
 
-import com.spa.springCommuProject.posts.dto.FreePostDTO;
+import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.user.domain.User;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
-@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
-@DiscriminatorColumn // 하위 테이블의 구분 컬럼 생성(default = DTYPE)
+@Builder
 public class Post {
 
     @Id
@@ -23,23 +25,11 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public void createPost(User user) {
-        this.user = user;
-        //user.getPosts().add(this); //연관관계
+    protected Post() {
     }
 
-    public Post() {
-    }
-
-    public Post(User user, String title, String content) {
-        this.available = true;
-        String nowTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        this.createdDate = LocalDateTime.parse(nowTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        this.view = 0;
-        this.user = user;
-        this.title = title;
-        this.content = content;
-    }
+    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    private List<File> photo = new ArrayList<>();
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
@@ -49,6 +39,8 @@ public class Post {
 
     private Boolean available;
     private int view;
+
+    private PostCategory postCategory;
 
     public void update(String title, String content){
         this.title = title;
@@ -66,7 +58,7 @@ public class Post {
         this.view++;
     }
 
-    public FreePostDTO convertToDto() {
-        return new FreePostDTO(title, content, createdDate, user);
+    public PostDTO convertToDTO() {
+        return new PostDTO(this.title, this.content, this.createdDate, this.user);
     }
 }

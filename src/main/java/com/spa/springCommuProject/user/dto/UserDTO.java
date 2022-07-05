@@ -1,20 +1,21 @@
 package com.spa.springCommuProject.user.dto;
 
 import com.spa.springCommuProject.user.domain.BigThreePower;
-import lombok.AllArgsConstructor;
+import com.spa.springCommuProject.user.domain.Role;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
-@AllArgsConstructor
-public class UserPageDto {
+public class UserDTO {
 
-    @NotBlank
+    private Long id;
+
     private String nickName;
-    @NotBlank
+
     private String loginId;
-    @NotBlank
+    private String password;
+
+    private Role role;
+
     private BigThreePower bigThreePower;
 
 }
