@@ -7,7 +7,7 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @AllArgsConstructor
-public class UserUpdateDto {
+public class UserUpdateDTO {
 
     @NotBlank
     private String nickName;

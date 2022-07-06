@@ -1,7 +1,7 @@
 package com.spa.springCommuProject.user.service;
 
 import com.spa.springCommuProject.posts.domain.Post;
-import com.spa.springCommuProject.posts.dto.FreePostDTO;
+import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.user.domain.BigThreePower;
 import com.spa.springCommuProject.user.domain.Role;
 import com.spa.springCommuProject.user.domain.User;
@@ -29,7 +29,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserJoinDto join(UserJoinDto userJoinDTO) {
+    public UserJoinDTO join(UserJoinDTO userJoinDTO) {
         User user = User.builder()
                 .nickName(userJoinDTO.getNickName())
                 .password(userJoinDTO.getPassword())
@@ -53,43 +53,44 @@ public class UserService {
         }
     }
 
-    public UserIdDto findLoginIdById(Long userId) {
+    public UserIdDTO findLoginIdById(Long userId) {
         User findUser = userRepository.findById(userId);
-        UserIdDto userIdDto = new UserIdDto(findUser.getLoginId());
+        UserIdDTO userIdDto = new UserIdDTO(findUser.getLoginId());
         return userIdDto;
     }
 
-    public UserPageDto findPageById(Long userId) {
+    public UserPageDTO findPageById(Long userId) {
         User findUser = userRepository.findById(userId);
-        UserPageDto userPageDto = new UserPageDto(findUser.getLoginId(), findUser.getNickName(), findUser.getBigThreePower());
+        UserPageDTO userPageDto = new UserPageDTO(findUser.getLoginId(), findUser.getNickName(), findUser.getBigThreePower());
         return userPageDto;
     }
 
-    public UserUpdateDto findUpdateById(Long userId) {
+    public UserUpdateDTO findUpdateById(Long userId) {
         User findUser = userRepository.findById(userId);
-        UserUpdateDto userUpdateDTO = new UserUpdateDto(findUser.getNickName(), findUser.getPassword());
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(findUser.getNickName(), findUser.getPassword());
         return userUpdateDTO;
     }
 
-    public List<FreePostDTO> findAllPostsByUserId(Long userId) {
-        List<Post> posts = userRepository.findAllPostsByUserId(userId);
+    public List<PostDTO> findAllPostsByUserId(Long userId) {
+        User user = userRepository.findById(userId);
+        List<Post> posts = userRepository.findAllPostsByUserId(user);
         return posts.stream()
-                .map(Post::convertToDto)
+                .map(Post::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    public UserLoginDto login(UserLoginDto userLoginDTO) {
+    public UserLoginDTO login(UserLoginDTO userLoginDTO) {
         /**
          * return null 이면 로그인 실패
          */
         User user = userRepository.findByLoginId(userLoginDTO.getLoginId())
                 .filter(m -> m.getPassword().equals(userLoginDTO.getPassword()))
                 .orElseThrow();
-        return new UserLoginDto(user.getLoginId(), user.getPassword());
+        return new UserLoginDTO(user.getLoginId(), user.getPassword());
     }
 
     @Transactional
-    public void updateUser(Long userId, UserUpdateDto userUpdateDTO) {
+    public void updateUser(Long userId, UserUpdateDTO userUpdateDTO) {
         User findUser = userRepository.findById(userId);
         findUser.update(userUpdateDTO.getNickName(), userUpdateDTO.getPassword());
     }
