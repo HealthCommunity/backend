@@ -53,6 +53,14 @@ public class PostService {
         return map;
     }
 
+    public List<PostDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
+        //User user = userRepository.findById(userId).get();
+        List<Post> posts = postRepository.findsByUserOrderByCreatedDateDesc(userId, pageable);
+        return posts.stream()
+                .map(Post::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public PostDTO save(PostDTO postDTO, PostCategory postCategory) {

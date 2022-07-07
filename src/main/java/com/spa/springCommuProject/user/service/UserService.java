@@ -1,20 +1,15 @@
 package com.spa.springCommuProject.user.service;
 
-import com.spa.springCommuProject.posts.domain.Post;
-import com.spa.springCommuProject.posts.dto.PostDTO;
-import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.BigThreePower;
 import com.spa.springCommuProject.user.domain.Role;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -22,7 +17,6 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
 
     @Transactional
     public Long join(User user) {
@@ -74,13 +68,7 @@ public class UserService {
         return userUpdateDTO;
     }
 
-    public List<PostDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
-        User user = userRepository.findById(userId).get();
-        List<Post> posts = postRepository.findsByUserOrderByCreatedDateDesc(user, pageable);
-        return posts.stream()
-                .map(Post::convertToDTO)
-                .collect(Collectors.toList());
-    }
+
 
     public UserLoginDTO login(UserLoginDTO userLoginDTO) {
         /**
