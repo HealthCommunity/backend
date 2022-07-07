@@ -1,11 +1,11 @@
 package com.spa.springCommuProject.user.controller;
 
 import com.spa.springCommuProject.posts.dto.PostDTO;
+import com.spa.springCommuProject.posts.service.PostService;
 import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserApi {
 
     private final UserService userService;
+    private final PostService postService;
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입")
@@ -87,6 +87,6 @@ public class UserApi {
                                                      @RequestParam("page") Integer page,
                                                      @RequestParam("size") Integer size) {
         PageRequest pageRequest =PageRequest.of(page, size); //page * size를 어디서 해야하는가 이부분 다음에 이야기
-        return new ResponseEntity<>(userService.findAllPostsByUserId(userId, pageRequest), HttpStatus.OK);
+        return new ResponseEntity<>(postService.findAllPostsByUserId(userId, pageRequest), HttpStatus.OK);
     }
 }
