@@ -1,7 +1,8 @@
 package com.spa.springCommuProject;
 
-import com.spa.springCommuProject.posts.domain.FreePost;
-import com.spa.springCommuProject.posts.domain.VideoPost;
+
+import com.spa.springCommuProject.posts.domain.PostCategory;
+import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.posts.service.PostService;
 import com.spa.springCommuProject.user.domain.BigThreePower;
 import com.spa.springCommuProject.user.domain.Role;
@@ -28,11 +29,8 @@ public class TestDataInit {
         user.setRole(Role.MASTER);
         userService.join(user);
         //PhotoPost photoPost = new PhotoPost(user, "PhotoTitle", "PhotoContent");
-        FreePost post = new FreePost(user, "FreeTitle", "FreeContent");
-        VideoPost videoPost = new VideoPost(user, "VideoTitle", "VideoContent");
-        postService.savePost(post);
-        //postService.savePost(photoPost);
-        postService.savePost(videoPost);
+        PostDTO postDTO = new PostDTO("saer", "asd", user);
+        postService.save(postDTO, PostCategory.FREEPOST);
         User user1 = new User("testUser1", "1234", "1234");
         User user2 = new User("testUser2", "1235", "1234");
         User user3 = new User("testUser3", "1236", "1234");

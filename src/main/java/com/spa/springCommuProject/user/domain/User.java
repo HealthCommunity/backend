@@ -1,10 +1,15 @@
 package com.spa.springCommuProject.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.spa.springCommuProject.posts.domain.Post;
+import com.spa.springCommuProject.user.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,14 +35,10 @@ public class User {
     @Embedded
     private BigThreePower bigThreePower;
 
-    //@OneToMany(mappedBy = "user")
-    //private List<Post> posts = new ArrayList<>();
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Post> posts = new ArrayList<>();
 
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
     private Boolean available;
     protected User() {
     }
@@ -66,6 +67,10 @@ public class User {
 
     public void updateBig(BigThreePower bigThreePower){
         this.bigThreePower = bigThreePower;
+    }
+
+    public UserDTO convertUserDTO(User user){
+        return new UserDTO(user.id, user.nickName, user.loginId, user.password, user.role, user.bigThreePower);
     }
 
 }

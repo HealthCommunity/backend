@@ -1,16 +1,21 @@
 package com.spa.springCommuProject.posts.service;
 
 
-import com.spa.springCommuProject.posts.domain.FreePost;
-import com.spa.springCommuProject.posts.domain.PhotoPost;
 import com.spa.springCommuProject.posts.domain.Post;
-import com.spa.springCommuProject.posts.domain.VideoPost;
+import com.spa.springCommuProject.posts.domain.PostCategory;
+import com.spa.springCommuProject.posts.dto.PostDTO;
+import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
+import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -19,77 +24,78 @@ public class PostService {
 
     private final PostRepository postRepository;
 
+    public List<PostDTO> findAllPosts(PostCategory postCategory) {
+        List<Post> posts = postRepository.findByPostCategory(postCategory);
+        return posts.stream().
+                map(Post::convertToDTO).
+                collect(Collectors.toList());
+    }
+
+    public int PostsCount(PostCategory postCategory) {
+        return postRepository.findByPostCategory(postCategory).size();
+    }
+
+    public List<PostViewDTO> findPagingPosts(PostCategory postCategory, Pageable page) {
+        List<Post> posts = postRepository.findByPostCategoryOrderByCreatedDateDesc(postCategory, page);
+        return posts.stream().
+                map(Post::convertToViewDTO).
+                collect(Collectors.toList());
+    }
+
+    public Map<String, Object> findPagingPostsAndCount(PostCategory postCategory, Pageable page){
+        Map<String, Object> map = new HashMap<>();
+        List<PostViewDTO> pagingPosts = findPagingPosts(postCategory, page);
+        int count =postRepository.findByPostCategory(postCategory).size(); //자유게시판 총 개수 프런트에 넘겨줘야 페이지 개수 만들수 있지 않을까
+
+        map.put("freePostCount", count);
+        map.put("freePosts", pagingPosts);
+
+        return map;
+    }
+
+
     @Transactional
-    public Long savePost(Post post){
+    public PostDTO save(PostDTO postDTO, PostCategory postCategory) {
+        Post post = Post.builder()
+                .user(postDTO.getUser())
+                .title(postDTO.getTitle())
+                .content(postDTO.getContent())
+                .createdDate(PostDTO.getNow())
+                .postCategory(postCategory)
+                //.files()       //file부분 바꿀거있어서 대기
+                .view(0)
+                .build();
         postRepository.save(post);
-        return post.getId();
+        return postDTO;
     }
 
-    public Post findOnePost(Long postId){
-        return postRepository.findOnePost(postId);
+    public PostDTO findPostById(Long postId){
+        Post post = postRepository.findById(postId).get();
+        return post.convertToDTO();
     }
 
-    public List<Post> findAvailablePosts(){
-        return postRepository.findAvailableAll();
-    }
-
-
-
-    public List<FreePost> findAvailableFreePosts(){
-        return postRepository.findAvailableAllFreePosts();
-    }
-
-    public List<FreePost> findAvailablePagingFreePosts(int page){
-        return postRepository.findAvailablePagingFreePosts(page);
-    }
-
-    public List<FreePost> mainPageFreePosts(){
-        return postRepository.mainPageFreePosts();
-    }
-
-    public List<PhotoPost> findAvailablePhotoPosts(){
-        return postRepository.findAvailableAllPhotoPost();
-    }
-
-    public List<PhotoPost> findAvailableAllPhotoPostViewDesc(){
-        return postRepository.findAvailableAllPhotoPostViewDesc();
-    }
-
-    public List<PhotoPost> findAvailablePagingPhotoPosts(int page){
-        return postRepository.findAvailablePagingPhotoPosts(page);
-    }
-
-    public List<VideoPost> findAvailableVideoPosts(){
-        return postRepository.findAvailableAllVideoPost();
-    }
-
-    public List<VideoPost> findAvailablePagingVideoPosts(int page){
-        return postRepository.findAvailablePagingVideoPosts(page);
-    }
-
-    public List<VideoPost> mainPageVideoPosts(){
-        return postRepository.mainPageVideoPosts();
-    }
-
-    public List<Post> findAllPosts(){
-        return postRepository.findAll();
-    }
-
-    @Transactional
-    public void updatePost(Long postId, String title, String content) {
-        Post findPost = postRepository.findOnePost(postId);
-        findPost.update(title,content);
-    }
-
-    @Transactional
-    public void deletePost(Long postId) {
-        Post findPost = postRepository.findOnePost(postId);
-        findPost.delete();
+    public PostNickNameDTO findNickNameById(Long postId){
+        Post post = postRepository.findById(postId).get();
+        return post.convertToNickNameDTO();
     }
 
     @Transactional
     public void viewIncrease(Long postId){
-        Post findPost = postRepository.findOnePost(postId);
-        findPost.viewIncrease();
+        Post post = postRepository.findById(postId).get();
+        post.viewIncrease();
     }
+
+    @Transactional
+    public PostDTO updatePost(Long postId, PostDTO postDTO) {
+        Post post = postRepository.findById(postId).get();
+        Post updatePost = post.update(postDTO.getTitle(), postDTO.getContent());
+        return updatePost.convertToDTO();
+    }
+
+    @Transactional
+    public void DeletePost(Long postId){
+        Post post = postRepository.findById(postId).get();
+        postRepository.delete(post);
+    }
+
 }
