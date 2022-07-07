@@ -66,7 +66,7 @@ public class Post {
         return new PostViewDTO(this.title, this.content, this.createdDate, this.user, this.view);
     }
 
-    public PostNickNameDTO convertToNickName(){
+    public PostNickNameDTO convertToNickNameDTO(){
         return new PostNickNameDTO(this.user.getNickName());
     }
 

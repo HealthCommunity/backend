@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +42,18 @@ public class PostService {
                 collect(Collectors.toList());
     }
 
+    public Map<String, Object> findPagingPostsAndCount(PostCategory postCategory, Pageable page){
+        Map<String, Object> map = new HashMap<>();
+        List<PostViewDTO> pagingPosts = findPagingPosts(postCategory, page);
+        int count =postRepository.findByPostCategory(postCategory).size(); //자유게시판 총 개수 프런트에 넘겨줘야 페이지 개수 만들수 있지 않을까
+
+        map.put("freePostCount", count);
+        map.put("freePosts", pagingPosts);
+
+        return map;
+    }
+
+
     @Transactional
     public PostDTO save(PostDTO postDTO, PostCategory postCategory) {
         Post post = Post.builder()
@@ -62,7 +76,7 @@ public class PostService {
 
     public PostNickNameDTO findNickNameById(Long postId){
         Post post = postRepository.findById(postId).get();
-        return post.convertToNickName();
+        return post.convertToNickNameDTO();
     }
 
     @Transactional

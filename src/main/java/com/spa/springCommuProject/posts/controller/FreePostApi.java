@@ -3,7 +3,6 @@ package com.spa.springCommuProject.posts.controller;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
-import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -28,15 +25,9 @@ public class FreePostApi {
     @ApiOperation(value = "페이징된 자유게시판 목록")
     public ResponseEntity<Map<String, Object>> freePostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        Map<String, Object> map = new HashMap<>();
         PageRequest pageRequest =PageRequest.of(page, size); //page * size를 어디서 해야하는가 이부분 다음에 이야기
-        int count = postService.PostsCount(PostCategory.FREEPOST); //자유게시판 총 개수 프런트에 넘겨줘야 페이지 개수 만들수 있지 않을까
-        List<PostViewDTO> freePosts = postService.findPagingPosts(PostCategory.FREEPOST, pageRequest);
-
-        map.put("freePostCount", count);
-        map.put("freePosts", freePosts);
-
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        Map<String, Object> pagingPostsAndCount = postService.findPagingPostsAndCount(PostCategory.FREEPOST, pageRequest);
+        return new ResponseEntity<>(pagingPostsAndCount, HttpStatus.OK);
     }
 
     @PostMapping()
