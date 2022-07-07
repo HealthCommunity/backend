@@ -6,6 +6,7 @@ import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -82,7 +83,10 @@ public class UserApi {
 
     @GetMapping("/{userId}/posts")
     @ApiOperation(value = "내 글 목록")
-    public ResponseEntity<List<PostDTO>> myPostsList(@PathVariable Long userId) {
-        return new ResponseEntity<>(userService.findAllPostsByUserId(userId), HttpStatus.OK);
+    public ResponseEntity<List<PostDTO>> myPostsList(@PathVariable Long userId,
+                                                     @RequestParam("page") Integer page,
+                                                     @RequestParam("size") Integer size) {
+        PageRequest pageRequest =PageRequest.of(page, size); //page * size를 어디서 해야하는가 이부분 다음에 이야기
+        return new ResponseEntity<>(userService.findAllPostsByUserId(userId, pageRequest), HttpStatus.OK);
     }
 }

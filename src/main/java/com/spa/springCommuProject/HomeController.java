@@ -2,7 +2,6 @@ package com.spa.springCommuProject;
 
 
 import com.spa.springCommuProject.user.domain.User;
-import com.spa.springCommuProject.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @RequiredArgsConstructor
 public class HomeController {
 
-    private final UserService userService;
+    //private final UserService userService;
 
 
 
