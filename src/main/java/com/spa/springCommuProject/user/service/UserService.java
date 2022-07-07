@@ -2,12 +2,14 @@ package com.spa.springCommuProject.user.service;
 
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.dto.PostDTO;
+import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.BigThreePower;
 import com.spa.springCommuProject.user.domain.Role;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public Long join(User user) {
@@ -54,26 +57,26 @@ public class UserService {
     }
 
     public UserIdDTO findLoginIdById(Long userId) {
-        User findUser = userRepository.findById(userId);
+        User findUser = userRepository.findById(userId).get();
         UserIdDTO userIdDto = new UserIdDTO(findUser.getLoginId());
         return userIdDto;
     }
 
     public UserPageDTO findPageById(Long userId) {
-        User findUser = userRepository.findById(userId);
+        User findUser = userRepository.findById(userId).get();
         UserPageDTO userPageDto = new UserPageDTO(findUser.getLoginId(), findUser.getNickName(), findUser.getBigThreePower());
         return userPageDto;
     }
 
     public UserUpdateDTO findUpdateById(Long userId) {
-        User findUser = userRepository.findById(userId);
+        User findUser = userRepository.findById(userId).get();
         UserUpdateDTO userUpdateDTO = new UserUpdateDTO(findUser.getNickName(), findUser.getPassword());
         return userUpdateDTO;
     }
 
-    public List<PostDTO> findAllPostsByUserId(Long userId) {
-        User user = userRepository.findById(userId);
-        List<Post> posts = userRepository.findAllPostsByUserId(user);
+    public List<PostDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId).get();
+        List<Post> posts = postRepository.findsByUserOrderByCreatedDateDesc(user, pageable);
         return posts.stream()
                 .map(Post::convertToDTO)
                 .collect(Collectors.toList());
@@ -91,19 +94,19 @@ public class UserService {
 
     @Transactional
     public void updateUser(Long userId, UserUpdateDTO userUpdateDTO) {
-        User findUser = userRepository.findById(userId);
+        User findUser = userRepository.findById(userId).get();
         findUser.update(userUpdateDTO.getNickName(), userUpdateDTO.getPassword());
     }
 
     @Transactional
     public void deleteUser(Long userId) {
-        User findUser = userRepository.findById(userId);
+        User findUser = userRepository.findById(userId).get();
         findUser.delete();
     }
 
     @Transactional
     public void updateBigThree(Long userId, BigThreePower bigThreePower) {
-        User findUser = userRepository.findById(userId);
+        User findUser = userRepository.findById(userId).get();
         findUser.updateBig(bigThreePower);
     }
 }
