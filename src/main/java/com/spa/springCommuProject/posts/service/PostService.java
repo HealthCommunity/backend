@@ -88,12 +88,12 @@ public class PostService {
     @Transactional
     public PostDTO updatePost(Long postId, PostDTO postDTO) {
         Post post = postRepository.findById(postId).get();
-        Post updatePost = post.update(postDTO.getTitle(), postDTO.getContent());
+        Post updatePost = post.update(postDTO.getTitle(), postDTO.getContent()); //나중에 file추가
         return updatePost.convertToDTO();
     }
 
     @Transactional
-    public void DeletePost(Long postId){
+    public void deletePost(Long postId){
         Post post = postRepository.findById(postId).get();
         postRepository.delete(post);
     }
