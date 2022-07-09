@@ -1,17 +1,21 @@
 package com.spa.springCommuProject.user.controller;
 
-import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.posts.service.PostService;
-import com.spa.springCommuProject.user.dto.*;
+import com.spa.springCommuProject.user.dto.UserIdDTO;
+import com.spa.springCommuProject.user.dto.UserJoinDTO;
+import com.spa.springCommuProject.user.dto.UserLoginDTO;
+import com.spa.springCommuProject.user.dto.UserPageDTO;
+import com.spa.springCommuProject.user.dto.UserUpdateDTO;
 import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -81,12 +85,12 @@ public class UserApi {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}/posts")
-    @ApiOperation(value = "내 글 목록")
-    public ResponseEntity<List<PostDTO>> myPostsList(@PathVariable Long userId,
-                                                     @RequestParam("page") Integer page,
-                                                     @RequestParam("size") Integer size) {
-        PageRequest pageRequest =PageRequest.of(page, size); //page * size를 어디서 해야하는가 이부분 다음에 이야기
-        return new ResponseEntity<>(postService.findAllPostsByUserId(userId, pageRequest), HttpStatus.OK);
-    }
+//    @GetMapping("/{userId}/posts")
+//    @ApiOperation(value = "내 글 목록")
+//    public ResponseEntity<Page<PostDTO>> myPostsList(@PathVariable Long userId,
+//                                                     @RequestParam("page") Integer page,
+//                                                     @RequestParam("size") Integer size) {
+//        PageRequest pageRequest =PageRequest.of(page, size); //page * size를 어디서 해야하는가 이부분 다음에 이야기
+//        return new ResponseEntity<>(postService.findAllPostsByUserId(userId, pageRequest), HttpStatus.OK);
+//    }
 }

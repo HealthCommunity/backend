@@ -19,13 +19,6 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long join(User user) {
-        validateDuplicateUser(user); //중복 닉네임, 아이디 검증
-        userRepository.save(user);
-        return user.getId();
-    }
-
-    @Transactional
     public UserJoinDTO join(UserJoinDTO userJoinDTO) {
         User user = User.builder()
                 .nickName(userJoinDTO.getNickName())
