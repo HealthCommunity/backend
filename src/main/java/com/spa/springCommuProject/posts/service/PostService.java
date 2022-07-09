@@ -9,17 +9,11 @@ import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -29,37 +23,16 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-    public List<PostDTO> findAllPosts(PostCategory postCategory) {
-        List<Post> posts = postRepository.findByPostCategory(postCategory);
-        return posts.stream().
-                map(Post::convertToDTO).
-                collect(Collectors.toList());
-    }
-
-    public int PostsCount(PostCategory postCategory) {
-        return postRepository.findByPostCategory(postCategory).size();
-    }
-
-    public Page<Post> findPagingPosts(PostCategory postCategory, Pageable page) {
-        Page<Post> posts = postRepository.findByPostCategoryOrderByCreatedDateDesc(postCategory, page);
-        return posts;
-    }
-
-    public Page<PostViewDTO> findPagingPostsAndCount(PostCategory postCategory, Pageable page){
-//        Map<String, Object> map = new HashMap<>();
-        Page<Post> pagingPosts = findPagingPosts(postCategory, page);
-//        int count =postRepository.findByPostCategory(postCategory).size(); //자유게시판 총 개수 프런트에 넘겨줘야 페이지 개수 만들수 있지 않을까
-//
-//        map.put("freePostCount", count);
-//        map.put("freePosts", pagingPosts);
+    public Page<PostViewDTO> findPagingPosts(PostCategory postCategory, Pageable page){
+        Page<Post> pagingPosts = postRepository.findByPostCategory(postCategory, page);
         return pagingPosts.map(Post::convertToViewDTO);
     }
 
-//    public Page<PostDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
-//        //User user = userRepository.findById(userId).get();
-//        Page<Post> posts = postRepository.findsByUserOrderByCreatedDateDesc(userId, pageable);
-//        return posts.map(Post::convertToDTO);
-//    }
+    public Page<PostViewDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
+        User findUser = userRepository.findById(userId).get();
+        Page<Post> pagingPosts = postRepository.findByUserOrderByCreatedDateDesc(findUser, pageable);
+        return pagingPosts.map(Post::convertToViewDTO);
+    }
 
 
     @Transactional

@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,8 +27,8 @@ public class FreePostApi {
     @ApiOperation(value = "페이징된 자유게시판 목록")
     public ResponseEntity<Page<PostViewDTO>> freePostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending()); //page * size를 어디서 해야하는가 이부분 다음에 이야기
-        Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPostsAndCount(PostCategory.FREEPOST, pageRequest);
+        PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending());
+        Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.FREEPOST, pageRequest);
         return new ResponseEntity<>(pagingPostsAndCount, HttpStatus.OK);
     }
 

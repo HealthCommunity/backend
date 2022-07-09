@@ -9,12 +9,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,8 +27,8 @@ public class ExercisePostApi {
     @ApiOperation(value = "페이징된 운동게시판 목록")
     public ResponseEntity<Page<PostViewDTO>> exercisePostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        PageRequest pageRequest =PageRequest.of(page, size); //page * size를 어디서 해야하는가 이부분 다음에 이야기
-        Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPostsAndCount(PostCategory.EXERCISEPOST, pageRequest);
+        PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending());
+        Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.EXERCISEPOST, pageRequest);
         return new ResponseEntity<>(pagingPostsAndCount, HttpStatus.OK);
     }
 
