@@ -3,10 +3,13 @@ package com.spa.springCommuProject.posts.controller;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
+import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,10 +26,10 @@ public class FreePostApi {
 
     @GetMapping("/list")
     @ApiOperation(value = "페이징된 자유게시판 목록")
-    public ResponseEntity<Map<String, Object>> freePostListPage(@RequestParam("page") Integer page,
+    public ResponseEntity<Page<PostViewDTO>> freePostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        PageRequest pageRequest =PageRequest.of(page, size); //page * size를 어디서 해야하는가 이부분 다음에 이야기
-        Map<String, Object> pagingPostsAndCount = postService.findPagingPostsAndCount(PostCategory.FREEPOST, pageRequest);
+        PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending()); //page * size를 어디서 해야하는가 이부분 다음에 이야기
+        Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPostsAndCount(PostCategory.FREEPOST, pageRequest);
         return new ResponseEntity<>(pagingPostsAndCount, HttpStatus.OK);
     }
 
