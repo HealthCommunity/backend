@@ -17,12 +17,9 @@ public class PostViewDTO {
     @NotBlank
     private String title;
 
-    @NotBlank
-    private String content;
-
     private LocalDateTime createdDate;
 
-    private User user;
+    private String nickname;
 
     private int view;
 

@@ -48,6 +48,13 @@ public class Post {
     @Enumerated(EnumType.STRING)
     private PostCategory postCategory;
 
+    public Post(User user, String title, String content, PostCategory postCategory) {
+        this.user = user;
+        this.title = title;
+        this.content = content;
+        this.postCategory = postCategory;
+    }
+
     public Post update(String title, String content){
         this.title = title;
         this.content = content;
@@ -59,11 +66,11 @@ public class Post {
     }
 
     public PostDTO convertToDTO() { //파일 추가돼야함 나중에
-        return new PostDTO(this.title, this.content, this.createdDate, this.user, this.view);
+        return new PostDTO(this.title, this.content, this.createdDate, null, this.user.getNickName(), this.view);
     }
 
     public PostViewDTO convertToViewDTO(){
-        return new PostViewDTO(this.title, this.content, this.createdDate, this.user, this.view);
+        return new PostViewDTO(this.title, this.createdDate, this.user.getNickName(), this.view);
     }
 
     public PostNickNameDTO convertToNickNameDTO(){

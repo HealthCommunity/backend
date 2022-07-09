@@ -7,7 +7,11 @@ import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
 import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.repository.PostRepository;
+import com.spa.springCommuProject.user.domain.User;
+import com.spa.springCommuProject.user.repository.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     public List<PostDTO> findAllPosts(PostCategory postCategory) {
         List<Post> posts = postRepository.findByPostCategory(postCategory);
@@ -35,44 +40,40 @@ public class PostService {
         return postRepository.findByPostCategory(postCategory).size();
     }
 
-    public List<PostViewDTO> findPagingPosts(PostCategory postCategory, Pageable page) {
-        List<Post> posts = postRepository.findByPostCategoryOrderByCreatedDateDesc(postCategory, page);
-        return posts.stream().
-                map(Post::convertToViewDTO).
-                collect(Collectors.toList());
+    public Page<Post> findPagingPosts(PostCategory postCategory, Pageable page) {
+        Page<Post> posts = postRepository.findByPostCategoryOrderByCreatedDateDesc(postCategory, page);
+        return posts;
     }
 
-    public Map<String, Object> findPagingPostsAndCount(PostCategory postCategory, Pageable page){
-        Map<String, Object> map = new HashMap<>();
-        List<PostViewDTO> pagingPosts = findPagingPosts(postCategory, page);
-        int count =postRepository.findByPostCategory(postCategory).size(); //자유게시판 총 개수 프런트에 넘겨줘야 페이지 개수 만들수 있지 않을까
-
-        map.put("freePostCount", count);
-        map.put("freePosts", pagingPosts);
-
-        return map;
+    public Page<PostViewDTO> findPagingPostsAndCount(PostCategory postCategory, Pageable page){
+//        Map<String, Object> map = new HashMap<>();
+        Page<Post> pagingPosts = findPagingPosts(postCategory, page);
+//        int count =postRepository.findByPostCategory(postCategory).size(); //자유게시판 총 개수 프런트에 넘겨줘야 페이지 개수 만들수 있지 않을까
+//
+//        map.put("freePostCount", count);
+//        map.put("freePosts", pagingPosts);
+        return pagingPosts.map(Post::convertToViewDTO);
     }
 
-    public List<PostDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
-        //User user = userRepository.findById(userId).get();
-        List<Post> posts = postRepository.findsByUserOrderByCreatedDateDesc(userId, pageable);
-        return posts.stream()
-                .map(Post::convertToDTO)
-                .collect(Collectors.toList());
-    }
+//    public Page<PostDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
+//        //User user = userRepository.findById(userId).get();
+//        Page<Post> posts = postRepository.findsByUserOrderByCreatedDateDesc(userId, pageable);
+//        return posts.map(Post::convertToDTO);
+//    }
 
 
     @Transactional
     public PostDTO save(PostDTO postDTO, PostCategory postCategory) {
+        User user = userRepository.findById(postDTO.getUserId()).orElseThrow();
         Post post = Post.builder()
-                .user(postDTO.getUser())
-                .title(postDTO.getTitle())
-                .content(postDTO.getContent())
-                .createdDate(PostDTO.getNow())
-                .postCategory(postCategory)
-                //.files()       //file부분 바꿀거있어서 대기
-                .view(0)
-                .build();
+            .user(user)
+            .title(postDTO.getTitle())
+            .content(postDTO.getContent())
+            .createdDate(PostDTO.getNow())
+            .postCategory(postCategory)
+            //.files()       //file부분 바꿀거있어서 대기
+            .view(0)
+            .build();
         postRepository.save(post);
         return postDTO;
     }

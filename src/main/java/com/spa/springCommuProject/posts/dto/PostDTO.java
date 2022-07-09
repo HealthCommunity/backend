@@ -26,25 +26,22 @@ public class PostDTO {
 
     private List<MultipartFile> files;
 
-    private User user;
+    private Long userId;
+    private String nickname;
 
     private int view;
 
     public PostDTO() {
     }
 
-    public PostDTO(String title, String content, LocalDateTime createdDate, User user, int view) {
+    public PostDTO(String title, String content, LocalDateTime createdDate, List<MultipartFile> files, String nickname,
+        int view) {
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;
-        this.user = user;
+        this.files = files;
+        this.nickname = nickname;
         this.view = view;
-    }
-
-    public PostDTO(String title, String content, User user) {
-        this.title = title;
-        this.content = content;
-        this.user = user;
     }
 
     public static LocalDateTime getNow(){
