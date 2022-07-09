@@ -1,66 +1,53 @@
-//package com.spa.springCommuProject;
-//
-//
-//import com.spa.springCommuProject.posts.domain.PostCategory;
-//import com.spa.springCommuProject.posts.dto.PostDTO;
-//import com.spa.springCommuProject.posts.service.PostService;
-//import com.spa.springCommuProject.user.domain.BigThreePower;
-//import com.spa.springCommuProject.user.domain.Role;
-//import com.spa.springCommuProject.user.domain.User;
-//import com.spa.springCommuProject.user.service.UserService;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Component;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import javax.annotation.PostConstruct;
-//
-//@Component
-//@Transactional
-//@RequiredArgsConstructor
-//public class TestDataInit {
-//
-//    private final UserService userService;
-//    private final PostService postService;
-//    //private final EntityManager em;
-//
-//    @PostConstruct
-//    public void init() {
-//        User user = new User("root","root","1234");
-//        user.setRole(Role.MASTER);
-//        userService.join(user);
-//        //PhotoPost photoPost = new PhotoPost(user, "PhotoTitle", "PhotoContent");
-//        PostDTO postDTO = new PostDTO("saer", "asd", user);
-//        postService.save(postDTO, PostCategory.FREEPOST);
-//        User user1 = new User("testUser1", "1234", "1234");
-//        User user2 = new User("testUser2", "1235", "1234");
-//        User user3 = new User("testUser3", "1236", "1234");
-//        User user4 = new User("testUser4", "1237", "1234");
-//        User user5 = new User("testUser5", "1238", "1234");
-//        User user6 = new User("testUser6", "1239", "1234");
-//        User user7 = new User("testUser7", "1241", "1234");
-//        User user8 = new User("testUser8", "1242", "1234");
-//        User user9 = new User("testUser9", "1243", "1234");
-//        User user10 = new User("testUser10", "1244", "1234");
-//        userService.join(user1);
-//        userService.join(user2);
-//        userService.join(user3);
-//        userService.join(user4);
-//        userService.join(user5);
-//        userService.join(user6);
-//        userService.join(user7);
-//        userService.join(user8);
-//        userService.join(user9);
-//        userService.join(user10);
-//        userService.updateBigThree(user1.getId(),new BigThreePower(10,20,30));
-//        userService.updateBigThree(user2.getId(),new BigThreePower(60,200,100));
-//        userService.updateBigThree(user3.getId(),new BigThreePower(60,70,60));
-//        userService.updateBigThree(user4.getId(),new BigThreePower(70,200,40));
-//        userService.updateBigThree(user5.getId(),new BigThreePower(150,230,340));
-//        userService.updateBigThree(user6.getId(),new BigThreePower(30,70,80));
-//        userService.updateBigThree(user7.getId(),new BigThreePower(70,60,40));
-//        userService.updateBigThree(user8.getId(),new BigThreePower(90,80,50));
-//        userService.updateBigThree(user9.getId(),new BigThreePower(100,200,300));
-//        userService.updateBigThree(user10.getId(),new BigThreePower(10,20,90));
-//    }
-//
-//}
+package com.spa.springCommuProject;
+
+
+import com.spa.springCommuProject.posts.domain.Post;
+import com.spa.springCommuProject.posts.domain.PostCategory;
+import com.spa.springCommuProject.posts.dto.PostDTO;
+import com.spa.springCommuProject.posts.repository.PostRepository;
+import com.spa.springCommuProject.posts.service.PostService;
+import com.spa.springCommuProject.user.domain.BigThreePower;
+import com.spa.springCommuProject.user.domain.Role;
+import com.spa.springCommuProject.user.domain.User;
+import com.spa.springCommuProject.user.dto.UserJoinDTO;
+import com.spa.springCommuProject.user.repository.UserRepository;
+import com.spa.springCommuProject.user.service.UserService;
+import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+
+@Component
+@Transactional
+@RequiredArgsConstructor
+public class TestDataInit {
+
+    private final UserRepository userRepository;
+    private final PostRepository postRepository;
+
+    @PostConstruct
+    public void createDummyData() {
+        User june = new User("june", "june", "1234");
+        User hoon = new User("hoon", "hoon", "1234");
+        User tail = new User("tail", "tail", "1234");
+        User song = new User("song", "song", "1234");
+
+        userRepository.save(june);
+        userRepository.save(hoon);
+        userRepository.save(tail);
+        userRepository.save(song);
+        ArrayList<Post> posts = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            posts.add(new Post(june, "제목" + i, "글" + i, PostCategory.EXERCISEPOST));
+            posts.add(new Post(hoon, "제목" + i, "글" + i, PostCategory.FREEPOST));
+            posts.add(new Post(tail, "제목" + i, "글" + i, PostCategory.THREEPOWERPOST));
+            posts.add(new Post(song, "제목" + i, "글" + i, PostCategory.EXERCISEPOST));
+        }
+        postRepository.saveAll(posts);
+    }
+
+}

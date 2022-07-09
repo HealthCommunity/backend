@@ -12,6 +12,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   profiles:
+    default: local
     group:
       "local": "testdb,common"
       "dev": "testdb,common"
