@@ -34,26 +34,26 @@ public class ExercisePostApi {
 
     @PostMapping()
     @ApiOperation(value = "운동게시글 생성")
-    public ResponseEntity<PostDTO> createExcercisePost(PostDTO postDTO){
+    public ResponseEntity<PostDTO> createExercisePost(PostDTO postDTO){
         return new ResponseEntity<>(postService.save(postDTO, PostCategory.EXERCISEPOST), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
     @ApiOperation(value = "운동게시글 보기 페이지")
-    public ResponseEntity<PostDTO> excercisePostView(@PathVariable Long postId) {
+    public ResponseEntity<PostDTO> exercisePostView(@PathVariable Long postId) {
         postService.viewIncrease(postId);  //조회 수 증가 But 새로고침할때마다 계속오름 logic필요(IP관련?)
         return new ResponseEntity<>(postService.findPostById(postId), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "운동게시글 수정 폼")
-    public ResponseEntity<PostDTO> editExcercisePostForm(@PathVariable Long postId) {
+    public ResponseEntity<PostDTO> editExercisePostForm(@PathVariable Long postId) {
         return new ResponseEntity<>(postService.findPostById(postId), HttpStatus.OK);
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "게시글 수정")
-    public ResponseEntity<PostDTO> editExcercisePost(@PathVariable Long postId,
+    public ResponseEntity<PostDTO> editExercisePost(@PathVariable Long postId,
                                @Valid PostDTO postDTO) {
         PostDTO updatePostDTO = postService.updatePost(postId, postDTO);
 

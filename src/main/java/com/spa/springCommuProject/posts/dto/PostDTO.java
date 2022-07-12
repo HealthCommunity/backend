@@ -1,13 +1,11 @@
 package com.spa.springCommuProject.posts.dto;
 
-import com.spa.springCommuProject.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
@@ -44,8 +42,5 @@ public class PostDTO {
         this.view = view;
     }
 
-    public static LocalDateTime getNow(){
-        String nowTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return LocalDateTime.parse(nowTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
+
 }

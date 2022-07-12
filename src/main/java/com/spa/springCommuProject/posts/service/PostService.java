@@ -1,11 +1,11 @@
 package com.spa.springCommuProject.posts.service;
 
 
+import com.spa.springCommuProject.file.domain.FileCategory;
+import com.spa.springCommuProject.file.service.FileService;
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.domain.PostCategory;
-import com.spa.springCommuProject.posts.dto.PostDTO;
-import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
-import com.spa.springCommuProject.posts.dto.PostViewDTO;
+import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
@@ -22,8 +22,9 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final FileService fileService;
 
-    public Page<PostViewDTO> findPagingPosts(PostCategory postCategory, Pageable page){
+    public Page<PostViewDTO> findPagingPosts(PostCategory postCategory, Pageable page) {
         Page<Post> pagingPosts = postRepository.findByPostCategory(postCategory, page);
         return pagingPosts.map(Post::convertToViewDTO);
     }
@@ -39,30 +40,45 @@ public class PostService {
     public PostDTO save(PostDTO postDTO, PostCategory postCategory) {
         User user = userRepository.findById(postDTO.getUserId()).orElseThrow();
         Post post = Post.builder()
-            .user(user)
-            .title(postDTO.getTitle())
-            .content(postDTO.getContent())
-            .createdDate(PostDTO.getNow())
-            .postCategory(postCategory)
-            //.files()       //file부분 바꿀거있어서 대기
-            .view(0)
-            .build();
+                .user(user)
+                .title(postDTO.getTitle())
+                .content(postDTO.getContent())
+                .postCategory(postCategory)
+                //.files()       //file부분 바꿀거있어서 대기
+                .build();
         postRepository.save(post);
         return postDTO;
     }
 
-    public PostDTO findPostById(Long postId){
+    @Transactional
+    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory) {
+        User user = userRepository.findById(threePostRequest.getUserId()).orElseThrow();
+        Post post = Post.builder()
+                .user(user)
+                .title(threePostRequest.getTitle())
+                .content(threePostRequest.getContent())
+                .postCategory(postCategory)
+                .build();
+        String benchUrl = fileService.save(threePostRequest.getBench(), post, FileCategory.VIDEO);
+        String squatUrl = fileService.save(threePostRequest.getSquat(), post, FileCategory.VIDEO);
+        String deadUrl = fileService.save(threePostRequest.getDead(), post, FileCategory.VIDEO);
+        postRepository.save(post);
+        ThreePostResponse threePostResponse = new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
+        return threePostResponse;
+    }
+
+    public PostDTO findPostById(Long postId) {
         Post post = postRepository.findById(postId).get();
         return post.convertToDTO();
     }
 
-    public PostNickNameDTO findNickNameById(Long postId){
+    public PostNickNameDTO findNickNameById(Long postId) {
         Post post = postRepository.findById(postId).get();
         return post.convertToNickNameDTO();
     }
 
     @Transactional
-    public void viewIncrease(Long postId){
+    public void viewIncrease(Long postId) {
         Post post = postRepository.findById(postId).get();
         post.viewIncrease();
     }
@@ -75,7 +91,7 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId){
+    public void deletePost(Long postId) {
         Post post = postRepository.findById(postId).get();
         postRepository.delete(post);
     }

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/community;
+    url: jdbc:h2:tcp://localhost/~/community
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -12,7 +12,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   profiles:
-    default: local
+#    default: local
     group:
       "local": "testdb,common"
       "dev": "testdb,common"
@@ -24,10 +24,27 @@ spring:
       hibernate:
         format_sql: true
 
+cloud:
+  aws:
+    s3:
+      bucket: healthcommunitybucket
+    credentials:
+      access-key: AKIAVDREP22CSUO6CW4W
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
 
 logging:
   level:
     org.hibernate.SQL: error
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: ERROR
 
 server:
   servlet:
