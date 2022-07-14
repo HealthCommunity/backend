@@ -42,11 +42,21 @@ public class FileDetail {
     public static FileDetail multipartOf(MultipartFile multipartFile, Post post) {
         final String uploadName = MultipartUtil.createFileUploadFileName();
         final String format = MultipartUtil.getFormat(multipartFile.getContentType());
+        String formatCategory;
+        if(format.equalsIgnoreCase("JPEG")||format.equalsIgnoreCase("JPG")||format.equalsIgnoreCase("PNG")
+                ||format.equalsIgnoreCase("GIF") ||format.equalsIgnoreCase("PSD")
+                ||format.equalsIgnoreCase("PDF")||format.equalsIgnoreCase("RAW")||format.equalsIgnoreCase("TIF")){
+            formatCategory = FileCategory.IMAGE.name();
+        }else{
+            formatCategory = FileCategory.VIDEO.name();
+        }
+
         return FileDetail.builder()
                 .uploadFileName(uploadName)
                 .storeFileName(multipartFile.getOriginalFilename())
                 .format(format)
-                .path(MultipartUtil.createPath(uploadName, format))
+                .path(MultipartUtil.createPath(uploadName, format, formatCategory))
+                .fileCategory(FileCategory.valueOf(formatCategory))
                 .bytes(multipartFile.getSize())
                 .post(post)
                 .build();

@@ -40,7 +40,7 @@ public final class MultipartUtil {
      * @param fileId 생성된 파일 고유 ID
      * @param format 확장자
      */
-    public static String createPath(String fileId, String format) {
-        return String.format("%s/%s.%s", IMAGE_DIR, fileId, format);
+    public static String createPath(String fileId, String format, String formatCategory) {
+        return String.format("%s/%s.%s", formatCategory, fileId, format);
     }
 }
