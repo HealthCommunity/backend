@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
@@ -16,4 +18,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                                   Pageable pageable); //페이징 기능
 
     Page<Post> findByUserOrderByCreatedDateDesc(User user, Pageable pageable);
+
+    // findByXXX: XXX 컬럼을 키워드로 검색
+    // Containing: 특정 키워드 포함 여부
+    //IgnoreCase 키워드는 대소문자 구별을 하지 않는다
+    List<Post> findByTitleContainingIgnoreCase(String title);
 }

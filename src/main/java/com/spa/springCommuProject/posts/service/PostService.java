@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -67,6 +68,15 @@ public class PostService {
         String deadUrl = fileService.save(threePostRequest.getDead(), post);
 
         return new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
+    }
+
+    @Transactional
+    public List<PostViewDTO> searchTitle(String keyword) {
+        return postRepository
+                .findByTitleContainingIgnoreCase(keyword)
+                .stream()
+                .map(Post::convertToViewDTO)
+                .collect(Collectors.toList());
     }
 
     public PostDTO findPostById(Long postId) {
