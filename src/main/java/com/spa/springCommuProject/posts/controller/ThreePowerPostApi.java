@@ -1,6 +1,5 @@
 package com.spa.springCommuProject.posts.controller;
 
-import com.spa.springCommuProject.file.service.FileService;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
@@ -17,11 +16,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/threepowerPost")
+@RequestMapping("/api/threepowerpost")
 public class ThreePowerPostApi {
 
     private final PostService postService;
-    private final FileService fileService;
 
     @GetMapping("/list")
     @ApiOperation(value = "페이징된 삼대력게시판 목록")

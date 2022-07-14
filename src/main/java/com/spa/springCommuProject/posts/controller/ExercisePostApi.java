@@ -1,9 +1,7 @@
 package com.spa.springCommuProject.posts.controller;
 
 import com.spa.springCommuProject.posts.domain.PostCategory;
-import com.spa.springCommuProject.posts.dto.PostDTO;
-import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
-import com.spa.springCommuProject.posts.dto.PostViewDTO;
+import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/exerciseePost")
+@RequestMapping("/api/exercisepost")
 public class ExercisePostApi {
 
     private final PostService postService;
@@ -34,8 +32,8 @@ public class ExercisePostApi {
 
     @PostMapping()
     @ApiOperation(value = "운동게시글 생성")
-    public ResponseEntity<PostDTO> createExercisePost(PostDTO postDTO){
-        return new ResponseEntity<>(postService.save(postDTO, PostCategory.EXERCISEPOST), HttpStatus.OK);
+    public ResponseEntity<PostResponse> createExercisePost(PostRequest postRequest){
+        return new ResponseEntity<>(postService.save(postRequest, PostCategory.EXERCISEPOST), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")

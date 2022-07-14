@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -19,10 +22,22 @@ public class FileService {
 
     @Transactional
     public String save(MultipartFile multipartFile, Post post) {
-        FileDetail fileDetail = FileDetail.multipartOf(multipartFile, post);
-        //FileDetail fileDetail = FileDetail.multipartOf(multipartFile, User user);
+        return saveFile(multipartFile, post);
+    }
+
+    @Transactional
+    public List<String> saveFiles(List<MultipartFile> files, Post post){
+        List<String> urls = new ArrayList<>();
+        for (MultipartFile file : files) {
+            urls.add(saveFile(file, post));
+        }
+        return urls;
+    }
+
+    private String saveFile(MultipartFile file, Post post) {
+        FileDetail fileDetail = FileDetail.multipartOf(file, post);
         fileRepository.save(fileDetail);
-        amazonS3ResourceStorage.store(fileDetail.getPath(), multipartFile);
+        amazonS3ResourceStorage.store(fileDetail.getPath(), file);
         return fileDetail.getPath();
     }
 

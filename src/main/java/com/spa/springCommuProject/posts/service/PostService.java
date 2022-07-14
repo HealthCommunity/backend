@@ -1,7 +1,6 @@
 package com.spa.springCommuProject.posts.service;
 
 
-import com.spa.springCommuProject.file.domain.FileCategory;
 import com.spa.springCommuProject.file.service.FileService;
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.domain.PostCategory;
@@ -14,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,17 +38,18 @@ public class PostService {
 
 
     @Transactional
-    public PostDTO save(PostDTO postDTO, PostCategory postCategory) {
-        User user = userRepository.findById(postDTO.getUserId()).orElseThrow();
+    public PostResponse save(PostRequest postRequest, PostCategory postCategory) {
+        User user = userRepository.findById(postRequest.getUserId()).orElseThrow();
         Post post = Post.builder()
                 .user(user)
-                .title(postDTO.getTitle())
-                .content(postDTO.getContent())
+                .title(postRequest.getTitle())
+                .content(postRequest.getContent())
                 .postCategory(postCategory)
-                //.files()       //file부분 바꿀거있어서 대기
                 .build();
         postRepository.save(post);
-        return postDTO;
+        List<String> urls = fileService.saveFiles(postRequest.getFiles(), post);
+
+        return new PostResponse(post, user.getNickName(), urls);
     }
 
     @Transactional
@@ -59,12 +61,12 @@ public class PostService {
                 .content(threePostRequest.getContent())
                 .postCategory(postCategory)
                 .build();
-        String benchUrl = fileService.save(threePostRequest.getBench(), post, FileCategory.VIDEO);
-        String squatUrl = fileService.save(threePostRequest.getSquat(), post, FileCategory.VIDEO);
-        String deadUrl = fileService.save(threePostRequest.getDead(), post, FileCategory.VIDEO);
         postRepository.save(post);
-        ThreePostResponse threePostResponse = new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
-        return threePostResponse;
+        String benchUrl = fileService.save(threePostRequest.getBench(), post);
+        String squatUrl = fileService.save(threePostRequest.getSquat(), post);
+        String deadUrl = fileService.save(threePostRequest.getDead(), post);
+
+        return new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
     }
 
     public PostDTO findPostById(Long postId) {

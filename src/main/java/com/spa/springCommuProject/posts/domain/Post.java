@@ -49,6 +49,9 @@ public class Post {
     @Builder.Default
     private int view = 0;
 
+//    @Builder.Default
+//    private int like = 0;
+
     @Enumerated(EnumType.STRING)
     private PostCategory postCategory;
 
@@ -85,4 +88,5 @@ public class Post {
         String nowTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return LocalDateTime.parse(nowTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
+
 }

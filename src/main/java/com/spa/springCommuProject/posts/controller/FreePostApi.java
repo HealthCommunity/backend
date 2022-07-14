@@ -1,9 +1,7 @@
 package com.spa.springCommuProject.posts.controller;
 
 import com.spa.springCommuProject.posts.domain.PostCategory;
-import com.spa.springCommuProject.posts.dto.PostDTO;
-import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
-import com.spa.springCommuProject.posts.dto.PostViewDTO;
+import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/freePost")
+@RequestMapping("/api/freepost")
 public class FreePostApi {
 
     private final PostService postService;
@@ -34,8 +32,8 @@ public class FreePostApi {
 
     @PostMapping()
     @ApiOperation(value = "자유게시글 생성")
-    public ResponseEntity<PostDTO> createFreePost(PostDTO postDTO){
-        return new ResponseEntity<>(postService.save(postDTO, PostCategory.FREEPOST), HttpStatus.OK);
+    public ResponseEntity<PostResponse> createFreePost(PostRequest postRequest){
+        return new ResponseEntity<>(postService.save(postRequest, PostCategory.FREEPOST), HttpStatus.OK);
     }
 
     @GetMapping("/{postId}")
