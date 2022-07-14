@@ -5,8 +5,8 @@ import org.springframework.util.StringUtils;
 import java.util.UUID;
 
 public final class MultipartUtil {
-    private static final String IMAGE_DIR = "images";
-    private static final String VIDEO_DIR = "videos";
+    //private static final String IMAGE_DIR = "images";
+
 
     /**
      * 로컬에서의 사용자 홈 디렉토리 경로를 반환합니다.
