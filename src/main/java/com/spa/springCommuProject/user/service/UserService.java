@@ -67,7 +67,7 @@ public class UserService {
         /**
          * return null 이면 로그인 실패
          */
-        User user = userRepository.findByLoginId(userLoginDTO.getLoginId())
+        User user = userRepository.findByLoginId(userLoginDTO.getUsername())
                 .filter(m -> m.getPassword().equals(userLoginDTO.getPassword()))
                 .orElseThrow();
         return new UserLoginDTO(user.getLoginId(), user.getPassword());

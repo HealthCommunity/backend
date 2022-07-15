@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 public class UserLoginDTO {
 
     @NotBlank
-    private String loginId;
+    private String username;
     @NotBlank
     private String password;
 }
