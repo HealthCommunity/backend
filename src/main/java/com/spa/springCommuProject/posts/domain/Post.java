@@ -2,6 +2,7 @@ package com.spa.springCommuProject.posts.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.spa.springCommuProject.file.domain.FileDetail;
 import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
 import com.spa.springCommuProject.posts.dto.PostViewDTO;
@@ -12,6 +13,7 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +38,19 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
     @JsonManagedReference
-    private List<File> files = new ArrayList<>();
+    private List<FileDetail> files = new ArrayList<>();
 
-    private LocalDateTime createdDate;
+    @Builder.Default
+    private LocalDateTime createdDate = Post.getNow();
 
     private String title;
     private String content;
 
-    private int view;
+    @Builder.Default
+    private int view = 0;
+
+//    @Builder.Default
+//    private int like = 0;
 
     @Enumerated(EnumType.STRING)
     private PostCategory postCategory;
@@ -75,6 +82,11 @@ public class Post {
 
     public PostNickNameDTO convertToNickNameDTO(){
         return new PostNickNameDTO(this.user.getNickName());
+    }
+
+    public static LocalDateTime getNow(){
+        String nowTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        return LocalDateTime.parse(nowTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
 }
