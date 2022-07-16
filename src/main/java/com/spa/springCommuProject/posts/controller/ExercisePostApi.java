@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.posts.controller;
 
+import com.spa.springCommuProject.common.CommonResponse;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
@@ -23,52 +24,52 @@ public class ExercisePostApi {
 
     @GetMapping("/list")
     @ApiOperation(value = "페이징된 운동게시판 목록")
-    public ResponseEntity<Page<PostViewDTO>> exercisePostListPage(@RequestParam("page") Integer page,
+    public ResponseEntity<CommonResponse<Page<PostViewDTO>>> exercisePostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
         PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending());
         Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.EXERCISEPOST, pageRequest);
-        return new ResponseEntity<>(pagingPostsAndCount, HttpStatus.OK);
+        return ResponseEntity.ok(CommonResponse.from(pagingPostsAndCount));
     }
 
     @PostMapping()
     @ApiOperation(value = "운동게시글 생성")
-    public ResponseEntity<PostResponse> createExercisePost(PostRequest postRequest){
-        return new ResponseEntity<>(postService.save(postRequest, PostCategory.EXERCISEPOST), HttpStatus.OK);
+    public ResponseEntity<CommonResponse<PostDTO>> createExcercisePost(PostDTO postDTO){
+        return ResponseEntity.ok(CommonResponse.from(postService.save(postDTO, PostCategory.EXERCISEPOST)));
     }
 
     @GetMapping("/{postId}")
     @ApiOperation(value = "운동게시글 보기 페이지")
-    public ResponseEntity<PostDTO> exercisePostView(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostDTO>> excercisePostView(@PathVariable Long postId) {
         postService.viewIncrease(postId);  //조회 수 증가 But 새로고침할때마다 계속오름 logic필요(IP관련?)
-        return new ResponseEntity<>(postService.findPostById(postId), HttpStatus.OK);
+        return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "운동게시글 수정 폼")
-    public ResponseEntity<PostDTO> editExercisePostForm(@PathVariable Long postId) {
-        return new ResponseEntity<>(postService.findPostById(postId), HttpStatus.OK);
+    public ResponseEntity<CommonResponse<PostDTO>> editExcercisePostForm(@PathVariable Long postId) {
+        return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "게시글 수정")
-    public ResponseEntity<PostDTO> editExercisePost(@PathVariable Long postId,
+    public ResponseEntity<CommonResponse<PostDTO>> editExcercisePost(@PathVariable Long postId,
                                @Valid PostDTO postDTO) {
         PostDTO updatePostDTO = postService.updatePost(postId, postDTO);
 
-        return new ResponseEntity<>(updatePostDTO, HttpStatus.OK);
+        return ResponseEntity.ok(CommonResponse.from(updatePostDTO));
     }
 
     @GetMapping("/{postId}/delete")
     @ApiOperation(value = "운동게시글 삭제 폼") //닉네임만 넘겨주기 ~님 정말 삭제하시겠습니까?
-    public ResponseEntity<PostNickNameDTO> deleteExercisePostForm(@PathVariable Long postId) {
-        return new ResponseEntity<>(postService.findNickNameById(postId), HttpStatus.OK);
+    public ResponseEntity<CommonResponse<PostNickNameDTO>> deleteExercisePostForm(@PathVariable Long postId) {
+        return ResponseEntity.ok(CommonResponse.from(postService.findNickNameById(postId)));
     }
 
     @PostMapping("{postId}/delete")
     @ApiOperation(value = "운동게시글 삭제")
-    public ResponseEntity deleteExercisePost(@PathVariable Long postId) {
+    public ResponseEntity<Void> deleteExercisePost(@PathVariable Long postId) {
         postService.deletePost(postId);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }
