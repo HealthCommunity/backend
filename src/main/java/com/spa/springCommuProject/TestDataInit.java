@@ -5,6 +5,9 @@ import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,12 +21,15 @@ public class TestDataInit {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @PostConstruct
     public void createDummyData() {
-        User june = new User("june", "june", "1234");
-        User hoon = new User("hoon", "hoon", "1234");
-        User tail = new User("tail", "tail", "1234");
-        User song = new User("song", "song", "1234");
+        String password = bCryptPasswordEncoder.encode("1234");
+
+        User june = new User("june", "june", password);
+        User hoon = new User("hoon", "hoon", password);
+        User tail = new User("tail", "tail", password);
+        User song = new User("song", "song", password);
 
         userRepository.save(june);
         userRepository.save(hoon);
