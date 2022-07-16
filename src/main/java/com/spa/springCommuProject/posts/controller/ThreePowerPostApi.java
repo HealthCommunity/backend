@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +32,8 @@ public class ThreePowerPostApi {
 
     @PostMapping()
     @ApiOperation(value = "삼대력게시글 생성")
-    public ResponseEntity<CommonResponse<PostDTO>> createThreePowerPost(PostDTO postDTO){
-        return ResponseEntity.ok(CommonResponse.from(postService.save(postDTO, PostCategory.THREEPOWERPOST)));
+    public ResponseEntity<CommonResponse<ThreePostResponse>> createThreePowerPost(ThreePostRequest threePostRequest){
+        return ResponseEntity.ok(CommonResponse.from(postService.threeSave(threePostRequest, PostCategory.THREEPOWERPOST)));
     }
 
     @GetMapping("/{postId}")

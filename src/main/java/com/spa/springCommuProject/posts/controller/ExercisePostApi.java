@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +32,8 @@ public class ExercisePostApi {
 
     @PostMapping()
     @ApiOperation(value = "운동게시글 생성")
-    public ResponseEntity<CommonResponse<PostDTO>> createExcercisePost(PostDTO postDTO){
-        return ResponseEntity.ok(CommonResponse.from(postService.save(postDTO, PostCategory.EXERCISEPOST)));
+    public ResponseEntity<CommonResponse<PostResponse>> createExcercisePost(PostRequest postRequest){
+        return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.EXERCISEPOST)));
     }
 
     @GetMapping("/{postId}")
