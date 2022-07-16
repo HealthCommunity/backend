@@ -2,9 +2,7 @@ package com.spa.springCommuProject.posts.controller;
 
 import com.spa.springCommuProject.common.CommonResponse;
 import com.spa.springCommuProject.posts.domain.PostCategory;
-import com.spa.springCommuProject.posts.dto.PostDTO;
-import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
-import com.spa.springCommuProject.posts.dto.PostViewDTO;
+import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +17,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/threepowerPost")
+@RequestMapping("/api/threepowerpost")
 public class ThreePowerPostApi {
 
     private final PostService postService;
