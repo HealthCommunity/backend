@@ -79,6 +79,15 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public List<PostViewDTO> searchTitleAndContent(String keyword) {
+        return postRepository
+                .findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword)
+                .stream()
+                .map(Post::convertToViewDTO)
+                .collect(Collectors.toList());
+    }
+
     public PostDTO findPostById(Long postId) {
         Post post = postRepository.findById(postId).get();
         return post.convertToDTO();

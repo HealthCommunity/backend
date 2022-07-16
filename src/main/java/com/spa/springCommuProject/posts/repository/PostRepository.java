@@ -23,4 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // Containing: 특정 키워드 포함 여부
     //IgnoreCase 키워드는 대소문자 구별을 하지 않는다
     List<Post> findByTitleContainingIgnoreCase(String title);
+
+    List<Post> findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(String title, String content);
+
 }
