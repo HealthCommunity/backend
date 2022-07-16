@@ -88,7 +88,9 @@ spring:
     username: sa
     password:
     driver-class-name: org.h2.Driver
-
+  h2:
+    console:
+      enabled: true
 image:
   dir: C:/Users/spa89/Downloads/develop/springCommuProject/file/image/
 

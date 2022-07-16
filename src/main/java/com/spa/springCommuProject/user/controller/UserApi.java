@@ -5,7 +5,6 @@ import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.service.PostService;
 import com.spa.springCommuProject.user.dto.UserIdDTO;
 import com.spa.springCommuProject.user.dto.UserJoinDTO;
-import com.spa.springCommuProject.user.dto.UserLoginDTO;
 import com.spa.springCommuProject.user.dto.UserPageDTO;
 import com.spa.springCommuProject.user.dto.UserUpdateDTO;
 import com.spa.springCommuProject.user.service.UserService;
@@ -36,13 +35,13 @@ public class UserApi {
         return ResponseEntity.ok(CommonResponse.from(responseDto));
     }
 
-    @PostMapping("/login")
-    @ApiOperation(value = "로그인")
-    public ResponseEntity<CommonResponse<UserLoginDTO>> login(UserLoginDTO userLoginDTO) {
-        UserLoginDTO loginDTO = userService.login(userLoginDTO);
-
-        return ResponseEntity.ok(CommonResponse.from(loginDTO));
-    }
+//    @PostMapping("/login")
+//    @ApiOperation(value = "로그인")
+//    public ResponseEntity<UserLoginDTO> login(UserLoginDTO userLoginDTO){
+//        UserLoginDTO loginDTO = userService.login(userLoginDTO);
+//
+//        return new ResponseEntity<>(loginDTO, HttpStatus.OK);
+//    }
 
     @GetMapping("/{userId}")
     @ApiOperation(value = "마이페이지")
