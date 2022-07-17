@@ -32,26 +32,26 @@ public class ExercisePostApi {
 
     @PostMapping()
     @ApiOperation(value = "운동게시글 생성")
-    public ResponseEntity<CommonResponse<PostResponse>> createExcercisePost(PostRequest postRequest){
+    public ResponseEntity<CommonResponse<PostResponse>> createExercisePost(PostRequest postRequest){
         return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.EXERCISEPOST)));
     }
 
     @GetMapping("/{postId}")
     @ApiOperation(value = "운동게시글 보기 페이지")
-    public ResponseEntity<CommonResponse<PostDTO>> excercisePostView(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostDTO>> exercisePostView(@PathVariable Long postId) {
         postService.viewIncrease(postId);  //조회 수 증가 But 새로고침할때마다 계속오름 logic필요(IP관련?)
         return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "운동게시글 수정 폼")
-    public ResponseEntity<CommonResponse<PostDTO>> editExcercisePostForm(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostDTO>> editExercisePostForm(@PathVariable Long postId) {
         return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "게시글 수정")
-    public ResponseEntity<CommonResponse<PostDTO>> editExcercisePost(@PathVariable Long postId,
+    public ResponseEntity<CommonResponse<PostDTO>> editExercisePost(@PathVariable Long postId,
                                @Valid PostDTO postDTO) {
         PostDTO updatePostDTO = postService.updatePost(postId, postDTO);
 

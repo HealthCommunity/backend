@@ -49,8 +49,8 @@ public class Post {
     @Builder.Default
     private int view = 0;
 
-//    @Builder.Default
-//    private int like = 0;
+    @Builder.Default
+    private int likes = 0;
 
     @Enumerated(EnumType.STRING)
     private PostCategory postCategory;
