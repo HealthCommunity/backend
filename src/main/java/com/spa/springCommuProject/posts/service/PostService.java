@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.posts.service;
 
 
+import com.spa.springCommuProject.file.domain.FileDetail;
 import com.spa.springCommuProject.file.service.FileService;
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.domain.PostCategory;
@@ -10,11 +11,16 @@ import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,8 +32,9 @@ public class PostService {
     private final UserRepository userRepository;
     private final FileService fileService;
 
-    public Page<PostViewDTO> findPagingPosts(PostCategory postCategory, Pageable page) {
-        Page<Post> pagingPosts = postRepository.findByPostCategory(postCategory, page);
+    public Page<PostViewDTO> findPagingPosts(PostCategory postCategory, Integer page, Integer size) {
+        PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending());
+        Page<Post> pagingPosts = postRepository.findByPostCategory(postCategory, pageRequest);
         return pagingPosts.map(Post::convertToViewDTO);
     }
 
@@ -40,6 +47,7 @@ public class PostService {
 
     @Transactional
     public PostResponse save(PostRequest postRequest, PostCategory postCategory) {
+        List<String> urls = new ArrayList<>();
         User user = userRepository.findById(postRequest.getUserId()).orElseThrow();
         Post post = Post.builder()
                 .user(user)
@@ -48,7 +56,9 @@ public class PostService {
                 .postCategory(postCategory)
                 .build();
         postRepository.save(post);
-        List<String> urls = fileService.saveFiles(postRequest.getFiles(), post);
+        if(!postRequest.getFiles().isEmpty()) {
+            urls = fileService.saveFiles(postRequest.getFiles(), post);
+        }
 
         return new PostResponse(post, user.getNickName(), urls);
     }
@@ -88,14 +98,28 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public PostDTO findPostById(Long postId) {
+    public PostResponse findPostById(Long postId) {
         Post post = postRepository.findById(postId).get();
-        return post.convertToDTO();
+        List<FileDetail> files = post.getFiles();
+        List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
+        return new PostResponse(post, post.getUser().getNickName(), urls);
     }
 
     public PostNickNameDTO findNickNameById(Long postId) {
         Post post = postRepository.findById(postId).get();
         return post.convertToNickNameDTO();
+    }
+
+    public Map<String, Page<MainPostResponse>> mainPagePosts() {
+        Map<String, Page<MainPostResponse>> data = new HashMap<>();
+        PageRequest pageRequest =PageRequest.of(0, 50, Sort.by("createdDate").descending());
+        data.put("freeposts",
+                postRepository.findByPostCategory(PostCategory.FREEPOST, pageRequest).map(Post::convertToMainPostResponse));
+        data.put("threepowerposts",
+                postRepository.findByPostCategory(PostCategory.THREEPOWERPOST, pageRequest).map(Post::convertToMainPostResponse));
+        data.put("exerciseposts",
+                postRepository.findByPostCategory(PostCategory.EXERCISEPOST, pageRequest).map(Post::convertToMainPostResponse));
+        return data;
     }
 
     @Transactional

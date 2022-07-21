@@ -7,8 +7,6 @@ import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +23,7 @@ public class FreePostApi {
     @ApiOperation(value = "페이징된 자유게시판 목록")
     public ResponseEntity<CommonResponse<Page<PostViewDTO>>> freePostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending());
-        Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.FREEPOST, pageRequest);
+        Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.FREEPOST, page, size);
         return ResponseEntity.ok(CommonResponse.from(pagingPostsAndCount));
     }
 
@@ -38,14 +35,14 @@ public class FreePostApi {
 
     @GetMapping("/{postId}")
     @ApiOperation(value = "자유게시글 보기 페이지")
-    public ResponseEntity<CommonResponse<PostDTO>> freePostView(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostResponse>> freePostView(@PathVariable Long postId) {
         postService.viewIncrease(postId);  //조회 수 증가 But 새로고침할때마다 계속오름 logic필요
         return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "자유게시글 수정 폼")
-    public ResponseEntity<CommonResponse<PostDTO>> editFreePostForm(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostResponse>> editFreePostForm(@PathVariable Long postId) {
         return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 

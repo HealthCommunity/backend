@@ -38,7 +38,7 @@ public class FileService {
         FileDetail fileDetail = FileDetail.multipartOf(file, post);
         fileRepository.save(fileDetail);
         amazonS3ResourceStorage.store(fileDetail.getPath(), file);
-        return "healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/" + fileDetail.getPath();
+        return fileDetail.getUrl();
     }
 
 

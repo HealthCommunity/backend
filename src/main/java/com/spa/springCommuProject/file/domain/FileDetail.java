@@ -61,4 +61,8 @@ public class FileDetail {
                 .post(post)
                 .build();
     }
+
+    public String getUrl(){
+        return "healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/" + this.getPath();
+    }
 }
