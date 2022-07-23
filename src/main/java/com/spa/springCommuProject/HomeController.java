@@ -21,7 +21,7 @@ public class HomeController {
 
     //public String home(){
     @GetMapping("/")
-    public @ResponseBody String home(){
+    public String home(){
         return "home";
     }
 }
