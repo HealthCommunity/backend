@@ -3,15 +3,28 @@ package com.spa.springCommuProject.config.login;
 import com.spa.springCommuProject.user.domain.User;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class PrincipalUserDetails implements UserDetails {
+public class PrincipalUserDetails implements UserDetails, OAuth2User {
 
     private User user;
+    private Map<String, Object> attributes;
 
     public PrincipalUserDetails(User user) {
         this.user = user;
+    }
+
+    public PrincipalUserDetails(User user, Map<String, Object> attributes) {
+        this.user = user;
+        this.attributes = attributes;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attributes;
     }
 
     @Override
@@ -28,7 +41,7 @@ public class PrincipalUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getLoginId();
+        return user.getNickName();
     }
 
     @Override
@@ -49,5 +62,10 @@ public class PrincipalUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return user.getNickName();
     }
 }

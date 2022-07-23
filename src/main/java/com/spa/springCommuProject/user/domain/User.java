@@ -32,7 +32,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Role role = Role.USER;
-
+    private String email;
+    private String provider;
+    private String providerId;
     @Embedded
     private BigThreePower bigThreePower;
 

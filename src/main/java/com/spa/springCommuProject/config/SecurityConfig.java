@@ -1,6 +1,8 @@
 package com.spa.springCommuProject.config;
 
 import com.spa.springCommuProject.config.login.JsonUsernamePasswordAuthenticationFilter;
+import com.spa.springCommuProject.config.login.PrincipalOauth2UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private PrincipalOauth2UserService principalOauth2UserService;
+
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
@@ -30,6 +35,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .formLogin();
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.oauth2Login()
+            .userInfoEndpoint()
+            .userService(principalOauth2UserService);
+        http.headers()
+            .frameOptions()
+            .sameOrigin();
     }
 
     @Bean
