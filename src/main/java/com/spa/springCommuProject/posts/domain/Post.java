@@ -3,6 +3,7 @@ package com.spa.springCommuProject.posts.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spa.springCommuProject.file.domain.FileDetail;
+import com.spa.springCommuProject.posts.dto.MainPostResponse;
 import com.spa.springCommuProject.posts.dto.PostDTO;
 import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
 import com.spa.springCommuProject.posts.dto.PostViewDTO;
@@ -87,6 +88,10 @@ public class Post {
     public static LocalDateTime getNow(){
         String nowTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         return LocalDateTime.parse(nowTime, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
+
+    public MainPostResponse convertToMainPostResponse(){
+        return new MainPostResponse(this.title, this.user.getNickName());
     }
 
 }

@@ -2,10 +2,11 @@ package com.spa.springCommuProject.common;
 
 
 import com.spa.springCommuProject.common.exception.NotFoundErrorCodeException;
-import java.util.Arrays;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.Arrays;
 
 @AllArgsConstructor
 @Getter

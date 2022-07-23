@@ -17,6 +17,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByPostCategory(PostCategory postCategory,
                                   Pageable pageable); //페이징 기능
 
+    List<Post> findByPostCategoryOrderByViewDesc(PostCategory postCategory); //메인화면 조회수 상위 10개 사진
+
     Page<Post> findByUserOrderByCreatedDateDesc(User user, Pageable pageable);
 
     // findByXXX: XXX 컬럼을 키워드로 검색

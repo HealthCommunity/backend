@@ -1,6 +1,8 @@
 package com.spa.springCommuProject;
 
 
+import com.spa.springCommuProject.posts.domain.Post;
+import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 
 @Component
 @Transactional
@@ -34,15 +37,15 @@ public class TestDataInit {
         userRepository.save(hoon);
         userRepository.save(tail);
         userRepository.save(song);
-//        ArrayList<Post> posts = new ArrayList<>();
-//        for (int i = 0; i < 100; i++) {
-//            posts.add(new Post(june, "title" + i, "content" + i, PostCategory.EXERCISEPOST));
-//            posts.add(new Post(hoon, "title" + i, "content" + i, PostCategory.FREEPOST));
-//            posts.add(new Post(tail, "title" + i, "content" + i, PostCategory.THREEPOWERPOST));
-//            posts.add(new Post(song, "title" + i, "content" + i, PostCategory.EXERCISEPOST));
-//        }
-//        postRepository.saveAll(posts);
-//    }
-
+        ArrayList<Post> posts = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            posts.add(new Post(june, "title" + i, "content" + i, PostCategory.EXERCISEPOST));
+            posts.add(new Post(hoon, "title" + i, "content" + i, PostCategory.FREEPOST));
+            posts.add(new Post(tail, "title" + i, "content" + i, PostCategory.THREEPOWERPOST));
+            posts.add(new Post(song, "title" + i, "content" + i, PostCategory.EXERCISEPOST));
+        }
+        postRepository.saveAll(posts);
     }
+
+
 }

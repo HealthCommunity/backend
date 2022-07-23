@@ -12,6 +12,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class PostResponse {
+
+    private Long id;
+
     @NotBlank
     private String title;
 
@@ -27,6 +30,7 @@ public class PostResponse {
     private LocalDateTime createdDate;
 
     public PostResponse(Post post,  String nickName, List<String> urls) {
+        this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdDate = post.getCreatedDate();
