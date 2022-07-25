@@ -22,6 +22,7 @@ public class TestDataInit {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @PostConstruct
     public void createDummyData() {
