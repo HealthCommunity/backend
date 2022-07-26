@@ -3,7 +3,6 @@ package com.spa.springCommuProject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
-import org.springframework.boot.context.ApplicationPidFileWriter;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class SpringCommuProjectApplication {
@@ -13,9 +12,7 @@ public class SpringCommuProjectApplication {
 	}
 
 	public static void main(String[] args) {
-		SpringApplication application = new SpringApplication(SpringCommuProjectApplication.class);
-		application.addListeners(new ApplicationPidFileWriter());
-		application.run(args);
+		SpringApplication.run(SpringCommuProjectApplication.class, args);
 	}
 
 }
