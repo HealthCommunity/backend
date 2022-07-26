@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.user.service;
 
 import com.spa.springCommuProject.user.domain.BigThreePower;
+import com.spa.springCommuProject.user.domain.Provider;
 import com.spa.springCommuProject.user.domain.Role;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.dto.*;
@@ -21,12 +22,15 @@ public class UserService {
     @Transactional
     public UserJoinDTO join(UserJoinDTO userJoinDTO) {
         User user = User.builder()
-                .nickName(userJoinDTO.getNickName())
-                .password(userJoinDTO.getPassword())
-                .loginId(userJoinDTO.getLoginId())
-                .bigThreePower(new BigThreePower(0, 0, 0))
-                .role(Role.USER)
-                .build();
+            .loginId(userJoinDTO.getLoginId())
+            .nickName(userJoinDTO.getNickName())
+            .password(userJoinDTO.getPassword())
+            .email(userJoinDTO.getEmail())
+            .provider(Provider.SELF)
+            .bigThreePower(new BigThreePower(0, 0, 0))
+            .role(Role.USER)
+            .available(true)
+            .build();
 
         validateDuplicateUser(user); //중복 닉네임, 아이디 검증
         userRepository.save(user);

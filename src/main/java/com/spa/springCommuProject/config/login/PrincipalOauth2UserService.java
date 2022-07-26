@@ -5,6 +5,7 @@ import com.spa.springCommuProject.config.login.provider.GoogleUserInfo;
 import com.spa.springCommuProject.config.login.provider.NaverUserInfo;
 import com.spa.springCommuProject.config.login.provider.OAuth2UserInfo;
 import com.spa.springCommuProject.user.domain.BigThreePower;
+import com.spa.springCommuProject.user.domain.Provider;
 import com.spa.springCommuProject.user.domain.Role;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
@@ -39,7 +40,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new NaverUserInfo((Map<String, Object>) oAuth2User.getAttributes().get("response"));
         }
 
-        String provider = oAuth2UserInfo.getProvider();
+        Provider provider = oAuth2UserInfo.getProvider();
         String providerId = oAuth2UserInfo.getProviderId();
         String username = oAuth2UserInfo.getProvider() + "_" + oAuth2UserInfo.getName();
         String email = oAuth2UserInfo.getEmail();

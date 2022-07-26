@@ -33,7 +33,7 @@ public class User {
     @Builder.Default
     private Role role = Role.USER;
     private String email;
-    private String provider;
+    private Provider provider;
     private String providerId;
     @Embedded
     private BigThreePower bigThreePower;

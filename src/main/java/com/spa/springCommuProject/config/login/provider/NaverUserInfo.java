@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.config.login.provider;
 
+import com.spa.springCommuProject.user.domain.Provider;
 import java.util.Map;
 
 public class NaverUserInfo implements OAuth2UserInfo{
@@ -16,8 +17,8 @@ public class NaverUserInfo implements OAuth2UserInfo{
     }
 
     @Override
-    public String getProvider() {
-        return "naver";
+    public Provider getProvider() {
+        return Provider.NAVER;
     }
 
     @Override

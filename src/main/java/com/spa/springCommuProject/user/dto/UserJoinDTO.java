@@ -17,4 +17,7 @@ public class UserJoinDTO {
 
     @NotBlank
     private String password;
+
+    @NotBlank
+    private String email;
 }

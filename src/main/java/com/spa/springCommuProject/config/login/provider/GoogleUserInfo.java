@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.config.login.provider;
 
+import com.spa.springCommuProject.user.domain.Provider;
 import java.util.Map;
 
 public class GoogleUserInfo implements OAuth2UserInfo{
@@ -16,8 +17,8 @@ public class GoogleUserInfo implements OAuth2UserInfo{
     }
 
     @Override
-    public String getProvider() {
-        return "google";
+    public Provider getProvider() {
+        return Provider.GOOGLE;
     }
 
     @Override
