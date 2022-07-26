@@ -29,9 +29,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-            .antMatchers("/api/user/join", "/api/user/login").permitAll()
-            //.antMatchers("/api/**").authenticated()
-            .anyRequest().permitAll()
+            .antMatchers("/api/user/join").permitAll()
+            .antMatchers("/api/**").authenticated()
             .and()
             .formLogin();
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -49,10 +48,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationManager(authenticationManager());
         return filter;
     }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-        auth.inMemoryAuthentication().withUser("asdf").password("{noop}asdf").roles("USER");
-    }
-
 }
