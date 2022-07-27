@@ -9,16 +9,14 @@ import com.spa.springCommuProject.user.dto.UserPageDTO;
 import com.spa.springCommuProject.user.dto.UserUpdateDTO;
 import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import java.time.LocalDateTime;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -90,9 +88,9 @@ public class UserApi {
 
     @GetMapping("/{userId}/posts")
     @ApiOperation(value = "내 글 목록")
-    public ResponseEntity<CommonResponse<Page<PostViewDTO>>> myPostsList(@PathVariable Long userId,
-        @RequestParam("page") Integer page,
-        @RequestParam("size") Integer size) {
+    public ResponseEntity<CommonResponse<List<PostViewDTO>>> myPostsList(@PathVariable Long userId,
+                                                                         @RequestParam("page") Integer page,
+                                                                         @RequestParam("size") Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending()); //page * size를 어디서 해야하는가 이부분 다음에 이야기
         return ResponseEntity.ok(CommonResponse.from(postService.findAllPostsByUserId(userId, pageRequest)));
     }
