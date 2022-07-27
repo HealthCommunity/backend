@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.posts.service;
 
 
+import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.file.domain.FileDetail;
 import com.spa.springCommuProject.file.service.FileService;
 import com.spa.springCommuProject.posts.domain.Post;
@@ -43,9 +44,9 @@ public class PostService {
 
 
     @Transactional
-    public PostResponse save(PostRequest postRequest, PostCategory postCategory) {
+    public PostResponse save(PostRequest postRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
         List<String> urls = new ArrayList<>();
-        User user = userRepository.findById(postRequest.getUserId()).orElseThrow();
+        User user = principalUserDetails.getUser();
         Post post = Post.builder()
                 .user(user)
                 .title(postRequest.getTitle())
@@ -61,8 +62,8 @@ public class PostService {
     }
 
     @Transactional
-    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory) {
-        User user = userRepository.findById(threePostRequest.getUserId()).orElseThrow();
+    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory,PrincipalUserDetails principalUserDetails) {
+        User user = principalUserDetails.getUser();
         Post post = Post.builder()
                 .user(user)
                 .title(threePostRequest.getTitle())
@@ -70,9 +71,9 @@ public class PostService {
                 .postCategory(postCategory)
                 .build();
         postRepository.save(post);
-        String benchUrl = fileService.save(threePostRequest.getBench(), post);
-        String squatUrl = fileService.save(threePostRequest.getSquat(), post);
-        String deadUrl = fileService.save(threePostRequest.getDead(), post);
+        String benchUrl = fileService.saveFile(threePostRequest.getBench(), post);
+        String squatUrl = fileService.saveFile(threePostRequest.getSquat(), post);
+        String deadUrl = fileService.saveFile(threePostRequest.getDead(), post);
 
         return new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
     }
@@ -132,10 +133,21 @@ public class PostService {
     }
 
     @Transactional
-    public PostDTO updatePost(Long postId, PostDTO postDTO) {
+    public PostResponse updatePost(Long postId, PostRequest postRequest) {
         Post post = postRepository.findById(postId).get();
-        Post updatePost = post.update(postDTO.getTitle(), postDTO.getContent()); //나중에 file추가
-        return updatePost.convertToDTO();
+        Post updatePost = post.update(postRequest.getTitle(), postRequest.getContent());
+        List<String> urls = fileService.updateFiles(postRequest.getFiles());
+        return new PostResponse(updatePost, updatePost.getUser().getNickName(), urls);
+    }
+
+    @Transactional
+    public ThreePostResponse threeUpdatePost(Long postId, ThreePostRequest threePostRequest) {
+        Post post = postRepository.findById(postId).get();
+        Post updatePost = post.update(threePostRequest.getTitle(), threePostRequest.getContent());
+        String benchUrl = fileService.updateFile(threePostRequest.getBench(), post);
+        String squatUrl = fileService.updateFile(threePostRequest.getSquat(), post);
+        String deadUrl = fileService.updateFile(threePostRequest.getDead(), post);
+        return new ThreePostResponse(updatePost, updatePost.getUser().getNickName(), benchUrl, squatUrl, deadUrl);
     }
 
     @Transactional

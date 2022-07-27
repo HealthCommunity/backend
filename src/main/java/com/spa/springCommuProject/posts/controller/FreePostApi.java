@@ -1,12 +1,14 @@
 package com.spa.springCommuProject.posts.controller;
 
 import com.spa.springCommuProject.common.CommonResponse;
+import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,8 +31,9 @@ public class FreePostApi {
 
     @PostMapping()
     @ApiOperation(value = "자유게시글 생성")
-    public ResponseEntity<CommonResponse<PostResponse>> createFreePost(PostRequest postRequest){
-        return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.FREEPOST)));
+    public ResponseEntity<CommonResponse<PostResponse>> createFreePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+                                                                       PostRequest postRequest){
+        return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.FREEPOST, principalUserDetails)));
     }
 
     @GetMapping("/{postId}")
@@ -48,11 +51,9 @@ public class FreePostApi {
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "자유게시글 수정")
-    public ResponseEntity<CommonResponse<PostDTO>> editFreePost(@PathVariable Long postId,
-                               @Valid PostDTO postDTO) {
-        PostDTO updatePostDTO = postService.updatePost(postId, postDTO);
-
-        return ResponseEntity.ok(CommonResponse.from(updatePostDTO));
+    public ResponseEntity<CommonResponse<PostResponse>> editFreePost(@PathVariable Long postId,
+                                                                @Valid PostRequest postRequest) {
+        return ResponseEntity.ok(CommonResponse.from(postService.updatePost(postId, postRequest)));
     }
 
     @GetMapping("/{postId}/delete")

@@ -21,24 +21,42 @@ public class FileService {
     private final AmazonS3ResourceStorage amazonS3ResourceStorage;
 
     @Transactional
-    public String save(MultipartFile multipartFile, Post post) {
-        return saveFile(multipartFile, post);
+    public String saveFile(MultipartFile multipartFile, Post post) {
+        return save(multipartFile, post);
     }
 
     @Transactional
     public List<String> saveFiles(List<MultipartFile> files, Post post){
         List<String> urls = new ArrayList<>();
         for (MultipartFile file : files) {
-            urls.add(saveFile(file, post));
+            urls.add(save(file, post));
         }
         return urls;
     }
 
-    private String saveFile(MultipartFile file, Post post) {
+    private String save(MultipartFile file, Post post) {
         FileDetail fileDetail = FileDetail.multipartOf(file, post);
         fileRepository.save(fileDetail);
         amazonS3ResourceStorage.store(fileDetail.getPath(), file);
         return fileDetail.getUrl();
+    }
+
+    @Transactional
+    public List<String> updateFiles(List<MultipartFile> multipartFiles){
+        List<String> urls = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+
+        }
+        return urls;
+    }
+
+    @Transactional
+    public String updateFile(MultipartFile multipartFile, Post post){
+        return update(multipartFile, post);
+    }
+
+    public String update(MultipartFile multipartFile, Post post){
+        return "update";
     }
 
 

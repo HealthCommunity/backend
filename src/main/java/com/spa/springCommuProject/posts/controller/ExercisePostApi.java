@@ -1,12 +1,14 @@
 package com.spa.springCommuProject.posts.controller;
 
 import com.spa.springCommuProject.common.CommonResponse;
+import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,8 +31,9 @@ public class ExercisePostApi {
 
     @PostMapping()
     @ApiOperation(value = "운동게시글 생성")
-    public ResponseEntity<CommonResponse<PostResponse>> createExercisePost(PostRequest postRequest){
-        return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.EXERCISEPOST)));
+    public ResponseEntity<CommonResponse<PostResponse>> createExercisePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+                                                                           PostRequest postRequest){
+        return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.EXERCISEPOST, principalUserDetails)));
     }
 
     @GetMapping("/{postId}")
@@ -48,11 +51,9 @@ public class ExercisePostApi {
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "게시글 수정")
-    public ResponseEntity<CommonResponse<PostDTO>> editExercisePost(@PathVariable Long postId,
-                               @Valid PostDTO postDTO) {
-        PostDTO updatePostDTO = postService.updatePost(postId, postDTO);
-
-        return ResponseEntity.ok(CommonResponse.from(updatePostDTO));
+    public ResponseEntity<CommonResponse<PostResponse>> editExercisePost(@PathVariable Long postId,
+                                                                    @Valid PostRequest postRequest) {
+        return ResponseEntity.ok(CommonResponse.from(postService.updatePost(postId, postRequest)));
     }
 
     @GetMapping("/{postId}/delete")
