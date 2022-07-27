@@ -7,6 +7,7 @@ import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,13 +19,14 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     public UserJoinResponse join(UserJoinRequest userJoinRequest) {
         User user = User.builder()
             .loginId(userJoinRequest.getLoginId())
             .nickName(userJoinRequest.getNickName())
-            .password(userJoinRequest.getPassword())
+            .password(bCryptPasswordEncoder.encode(userJoinRequest.getPassword()))
             .provider(Provider.SELF)
             .bigThreePower(new BigThreePower(0, 0, 0))
             .role(Role.USER)
