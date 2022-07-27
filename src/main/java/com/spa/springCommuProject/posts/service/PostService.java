@@ -136,7 +136,7 @@ public class PostService {
     public PostResponse updatePost(Long postId, PostRequest postRequest) {
         Post post = postRepository.findById(postId).get();
         Post updatePost = post.update(postRequest.getTitle(), postRequest.getContent());
-        List<String> urls = fileService.updateFiles(postRequest.getFiles());
+        List<String> urls = fileService.updateFiles(postRequest.getFiles(), updatePost);
         return new PostResponse(updatePost, updatePost.getUser().getNickName(), urls);
     }
 
@@ -144,9 +144,9 @@ public class PostService {
     public ThreePostResponse threeUpdatePost(Long postId, ThreePostRequest threePostRequest) {
         Post post = postRepository.findById(postId).get();
         Post updatePost = post.update(threePostRequest.getTitle(), threePostRequest.getContent());
-        String benchUrl = fileService.updateFile(threePostRequest.getBench(), post);
-        String squatUrl = fileService.updateFile(threePostRequest.getSquat(), post);
-        String deadUrl = fileService.updateFile(threePostRequest.getDead(), post);
+        String benchUrl = fileService.updateFile(threePostRequest.getBench(), updatePost);
+        String squatUrl = fileService.updateFile(threePostRequest.getSquat(), updatePost);
+        String deadUrl = fileService.updateFile(threePostRequest.getDead(), updatePost);
         return new ThreePostResponse(updatePost, updatePost.getUser().getNickName(), benchUrl, squatUrl, deadUrl);
     }
 

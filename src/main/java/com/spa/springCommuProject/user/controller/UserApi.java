@@ -93,7 +93,7 @@ public class UserApi {
 
     @GetMapping("/asd")
     public ResponseEntity<CommonResponse<PostViewDTO>> temp() {
-        PostViewDTO postViewDTO = new PostViewDTO("asd", LocalDateTime.now(), "asdz", 1);
+        PostViewDTO postViewDTO = new PostViewDTO(6000L,"asd", LocalDateTime.now(), "asdz", 1);
         return ResponseEntity.ok(CommonResponse.from(postViewDTO));
     }
 }

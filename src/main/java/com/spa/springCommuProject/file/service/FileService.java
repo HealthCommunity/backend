@@ -42,11 +42,13 @@ public class FileService {
     }
 
     @Transactional
-    public List<String> updateFiles(List<MultipartFile> multipartFiles){
+    public List<String> updateFiles(List<MultipartFile> multipartFiles, Post post){
         List<String> urls = new ArrayList<>();
+        List<FileDetail> files = post.getFiles();
         for (MultipartFile multipartFile : multipartFiles) {
 
         }
+
         return urls;
     }
 
