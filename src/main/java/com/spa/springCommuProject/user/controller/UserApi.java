@@ -3,10 +3,7 @@ package com.spa.springCommuProject.user.controller;
 import com.spa.springCommuProject.common.CommonResponse;
 import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.service.PostService;
-import com.spa.springCommuProject.user.dto.UserIdDTO;
-import com.spa.springCommuProject.user.dto.UserJoinDTO;
-import com.spa.springCommuProject.user.dto.UserPageDTO;
-import com.spa.springCommuProject.user.dto.UserUpdateDTO;
+import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +25,8 @@ public class UserApi {
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<CommonResponse<UserJoinDTO>> join(UserJoinDTO userJoinDTO) {
-        UserJoinDTO responseDto = userService.join(userJoinDTO);
-        return ResponseEntity.ok(CommonResponse.from(responseDto));
+    public ResponseEntity<CommonResponse<UserJoinResponse>> join(UserJoinRequest userJoinRequest) {
+        return ResponseEntity.ok(CommonResponse.from(userService.join(userJoinRequest)));
     }
 
 //    @PostMapping("/login")
