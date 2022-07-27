@@ -23,8 +23,8 @@ public class FreePostApi {
     @ApiOperation(value = "페이징된 자유게시판 목록")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> freePostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        List<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.FREEPOST, page, size);
-        return ResponseEntity.ok(CommonResponse.from(pagingPostsAndCount));
+        List<PostViewDTO> posts = postService.findPagingPosts(PostCategory.FREEPOST, page, size);
+        return ResponseEntity.ok(CommonResponse.from(posts));
     }
 
     @PostMapping()

@@ -23,8 +23,8 @@ public class ThreePowerPostApi {
     @ApiOperation(value = "페이징된 삼대력게시판 목록")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> threePowerPostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        List<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.THREEPOWERPOST, page, size);
-        return ResponseEntity.ok(CommonResponse.from(pagingPostsAndCount));
+        List<PostViewDTO> posts = postService.findPagingPosts(PostCategory.THREEPOWERPOST, page, size);
+        return ResponseEntity.ok(CommonResponse.from(posts));
     }
 
     @PostMapping()
