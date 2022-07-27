@@ -77,7 +77,6 @@ public class PostService {
         return new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
     }
 
-    @Transactional
     public List<PostViewDTO> searchTitle(String keyword) {
         return postRepository
                 .findByTitleContainingIgnoreCase(keyword)
@@ -86,7 +85,6 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public List<PostViewDTO> searchTitleAndContent(String keyword) {
         return postRepository
                 .findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword)
