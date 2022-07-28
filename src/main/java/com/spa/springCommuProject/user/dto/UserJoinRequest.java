@@ -9,6 +9,9 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class UserJoinRequest {
 
+    public UserJoinRequest(){}
+
+
     @NotBlank
     private String loginId;
 

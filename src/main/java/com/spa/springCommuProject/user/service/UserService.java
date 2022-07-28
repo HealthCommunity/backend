@@ -43,9 +43,9 @@ public class UserService {
         if (!findUserByNickName.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
         }
-        if (!userJoinRequest.getPasswordCheck().equals(userJoinRequest.getPassword())){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다");
-        }
+//        if (!userJoinRequest.getPasswordCheck().equals(userJoinRequest.getPassword())){
+//            throw new IllegalStateException("비밀번호가 일치하지 않습니다");
+//        }
         if (userRepository.findByLoginId(userJoinRequest.getLoginId()).isPresent()) {
             throw new IllegalStateException("이미 존재하는 아이디입니다.");
         }
