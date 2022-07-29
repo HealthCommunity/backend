@@ -15,6 +15,5 @@ public class CustumLoginSuccessHandler implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
         throws IOException, ServletException {
 
-        response.sendRedirect("/test");
     }
 }
