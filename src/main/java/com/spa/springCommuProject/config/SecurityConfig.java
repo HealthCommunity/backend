@@ -30,9 +30,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/join").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .and()
-                .formLogin()
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/");
+                .formLogin();
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.oauth2Login()
                 .userInfoEndpoint()
