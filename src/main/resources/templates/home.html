@@ -6,16 +6,19 @@
 </head>
 <body>
 <script>
-    async function request() {
-        const response = await fetch('http://54.166.132.169:8080',
-            {
-                method: 'GET',
-            });
-        // const data = await response.json();
-        // console.log(data)
-    }
-
-    request();
+    // async function request() {
+    //     const response = await fetch('http://54.166.132.169:8080',
+    //         {
+    //             method: 'GET',
+    //         });
+    //     // const data = await response.json();
+    //     // console.log(data)
+    // }
+    //
+    // request();
+    fetch('http://54.166.132.169:8080').then((response) =>
+        console.log(response.json())
+    );
 </script>
 
 </body>

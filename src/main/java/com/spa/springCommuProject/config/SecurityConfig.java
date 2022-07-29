@@ -27,17 +27,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-            .antMatchers("/api/user/join").permitAll()
-            .antMatchers("/api/**").authenticated()
-            .and()
-            .formLogin();
+                .antMatchers("/api/user/join").permitAll()
+                .antMatchers("/api/**").authenticated()
+                .and()
+                .formLogin()
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/");
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.oauth2Login()
-            .userInfoEndpoint()
-            .userService(principalOauth2UserService);
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService);
         http.headers()
-            .frameOptions()
-            .sameOrigin();
+                .frameOptions()
+                .sameOrigin();
     }
 
     @Bean
