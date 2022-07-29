@@ -2,6 +2,7 @@ package com.spa.springCommuProject.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spa.springCommuProject.posts.domain.Post;
+import com.spa.springCommuProject.user.dto.MainUserResponse;
 import com.spa.springCommuProject.user.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -72,8 +73,12 @@ public class User {
         this.bigThreePower = bigThreePower;
     }
 
-    public UserDTO convertUserDTO(User user){
+    public UserDTO convertToUserDTO(User user){
         return new UserDTO(user.id, user.nickName, user.loginId, user.password, user.role, user.bigThreePower);
+    }
+
+    public MainUserResponse convertToMainUserResponse(){
+        return new MainUserResponse(this.nickName, this.bigThreePower);
     }
 
 }

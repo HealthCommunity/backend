@@ -10,7 +10,6 @@ import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,16 +29,16 @@ public class PostService {
     private final UserRepository userRepository;
     private final FileService fileService;
 
-    public Page<PostViewDTO> findPagingPosts(PostCategory postCategory, Integer page, Integer size) {
+    public List<PostViewDTO> findPagingPosts(PostCategory postCategory, Integer page, Integer size) {
         PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending());
-        Page<Post> pagingPosts = postRepository.findByPostCategory(postCategory, pageRequest);
-        return pagingPosts.map(Post::convertToViewDTO);
+        List<Post> pagingPosts = postRepository.findByPostCategory(postCategory, pageRequest);
+        return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
     }
 
-    public Page<PostViewDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
+    public List<PostViewDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
         User findUser = userRepository.findById(userId).get();
-        Page<Post> pagingPosts = postRepository.findByUserOrderByCreatedDateDesc(findUser, pageable);
-        return pagingPosts.map(Post::convertToViewDTO);
+        List<Post> pagingPosts = postRepository.findByUserOrderByCreatedDateDesc(findUser, pageable);
+        return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
     }
 
 
@@ -80,7 +77,6 @@ public class PostService {
         return new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
     }
 
-    @Transactional
     public List<PostViewDTO> searchTitle(String keyword) {
         return postRepository
                 .findByTitleContainingIgnoreCase(keyword)
@@ -89,7 +85,6 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
     public List<PostViewDTO> searchTitleAndContent(String keyword) {
         return postRepository
                 .findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword)
@@ -110,16 +105,22 @@ public class PostService {
         return post.convertToNickNameDTO();
     }
 
-    public Map<String, Page<MainPostResponse>> mainPagePosts() {
-        Map<String, Page<MainPostResponse>> data = new HashMap<>();
-        PageRequest pageRequest =PageRequest.of(0, 50, Sort.by("createdDate").descending());
-        data.put("freeposts",
-                postRepository.findByPostCategory(PostCategory.FREEPOST, pageRequest).map(Post::convertToMainPostResponse));
-        data.put("threepowerposts",
-                postRepository.findByPostCategory(PostCategory.THREEPOWERPOST, pageRequest).map(Post::convertToMainPostResponse));
-        data.put("exerciseposts",
-                postRepository.findByPostCategory(PostCategory.EXERCISEPOST, pageRequest).map(Post::convertToMainPostResponse));
-        return data;
+    public MainPageDTO mainPagePosts() {
+        MainPageDTO mainPageDTO = new MainPageDTO();
+        PageRequest pageRequest =PageRequest.of(0, 30, Sort.by("createdDate").descending());
+        mainPageDTO.setFreeposts(postRepository.findByPostCategory(PostCategory.FREEPOST, pageRequest).stream().
+                map(Post::convertToMainPostResponse)
+                .collect(Collectors.toList()));
+        mainPageDTO.setExerciseposts(postRepository.findByPostCategory(PostCategory.EXERCISEPOST, pageRequest).stream().
+                map(Post::convertToMainPostResponse)
+                .collect(Collectors.toList()));
+        mainPageDTO.setThreepowerposts(postRepository.findByPostCategory(PostCategory.THREEPOWERPOST, pageRequest).stream().
+                map(Post::convertToMainPostResponse)
+                .collect(Collectors.toList()));
+        pageRequest = PageRequest.of(0, 10);
+        mainPageDTO.setUsers(userRepository.findByAvailableOrderByBigThreePowerSumDesc(true, pageRequest).stream()
+                .map(User::convertToMainUserResponse).collect(Collectors.toList()));
+        return mainPageDTO;
     }
 
     @Transactional

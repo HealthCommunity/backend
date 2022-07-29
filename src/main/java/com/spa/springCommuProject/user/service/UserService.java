@@ -7,6 +7,7 @@ import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,31 +19,34 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
-    public UserJoinDTO join(UserJoinDTO userJoinDTO) {
+    public UserJoinResponse join(UserJoinRequest userJoinRequest) {
         User user = User.builder()
-            .loginId(userJoinDTO.getLoginId())
-            .nickName(userJoinDTO.getNickName())
-            .password(userJoinDTO.getPassword())
-            .email(userJoinDTO.getEmail())
+            .loginId(userJoinRequest.getLoginId())
+            .nickName(userJoinRequest.getNickName())
+            .password(bCryptPasswordEncoder.encode(userJoinRequest.getPassword()))
             .provider(Provider.SELF)
             .bigThreePower(new BigThreePower(0, 0, 0))
             .role(Role.USER)
             .available(true)
             .build();
 
-        validateDuplicateUser(user); //중복 닉네임, 아이디 검증
+        validateDuplicateUser(userJoinRequest); //중복 닉네임, 아이디 검증
         userRepository.save(user);
-        return userJoinDTO;
+        return new UserJoinResponse(user.getId(), user.getNickName());
     }
 
-    private void validateDuplicateUser(User user) {
-        List<User> findUserByNickName = userRepository.findByNickName(user.getNickName());
+    private void validateDuplicateUser(UserJoinRequest userJoinRequest) {
+        List<User> findUserByNickName = userRepository.findByNickName(userJoinRequest.getNickName());
         if (!findUserByNickName.isEmpty()) {
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
         }
-        if (userRepository.findByLoginId(user.getLoginId()).isPresent()) {
+//        if (!userJoinRequest.getPasswordCheck().equals(userJoinRequest.getPassword())){
+//            throw new IllegalStateException("비밀번호가 일치하지 않습니다");
+//        }
+        if (userRepository.findByLoginId(userJoinRequest.getLoginId()).isPresent()) {
             throw new IllegalStateException("이미 존재하는 아이디입니다.");
         }
     }

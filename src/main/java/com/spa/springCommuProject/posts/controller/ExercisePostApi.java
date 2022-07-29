@@ -6,11 +6,11 @@ import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,9 +21,9 @@ public class ExercisePostApi {
 
     @GetMapping("/list")
     @ApiOperation(value = "페이징된 운동게시판 목록")
-    public ResponseEntity<CommonResponse<Page<PostViewDTO>>> exercisePostListPage(@RequestParam("page") Integer page,
+    public ResponseEntity<CommonResponse<List<PostViewDTO>>> exercisePostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        Page<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.EXERCISEPOST, page, size);
+        List<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.EXERCISEPOST, page, size);
         return ResponseEntity.ok(CommonResponse.from(pagingPostsAndCount));
     }
 

@@ -91,7 +91,7 @@ public class Post {
     }
 
     public MainPostResponse convertToMainPostResponse(){
-        return new MainPostResponse(this.title, this.user.getNickName());
+        return new MainPostResponse(this.id, this.title, this.user.getNickName(), this.getView());
     }
 
 }

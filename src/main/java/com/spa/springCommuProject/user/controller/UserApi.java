@@ -3,22 +3,17 @@ package com.spa.springCommuProject.user.controller;
 import com.spa.springCommuProject.common.CommonResponse;
 import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.service.PostService;
-import com.spa.springCommuProject.user.dto.UserIdDTO;
-import com.spa.springCommuProject.user.dto.UserJoinDTO;
-import com.spa.springCommuProject.user.dto.UserPageDTO;
-import com.spa.springCommuProject.user.dto.UserUpdateDTO;
+import com.spa.springCommuProject.user.dto.*;
 import com.spa.springCommuProject.user.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import java.time.LocalDateTime;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,9 +25,8 @@ public class UserApi {
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<CommonResponse<UserJoinDTO>> join(UserJoinDTO userJoinDTO) {
-        UserJoinDTO responseDto = userService.join(userJoinDTO);
-        return ResponseEntity.ok(CommonResponse.from(responseDto));
+    public ResponseEntity<CommonResponse<UserJoinResponse>> join(@RequestBody UserJoinRequest userJoinRequest) {
+        return ResponseEntity.ok(CommonResponse.from(userService.join(userJoinRequest)));
     }
 
 //    @PostMapping("/login")
@@ -90,9 +84,9 @@ public class UserApi {
 
     @GetMapping("/{userId}/posts")
     @ApiOperation(value = "내 글 목록")
-    public ResponseEntity<CommonResponse<Page<PostViewDTO>>> myPostsList(@PathVariable Long userId,
-        @RequestParam("page") Integer page,
-        @RequestParam("size") Integer size) {
+    public ResponseEntity<CommonResponse<List<PostViewDTO>>> myPostsList(@PathVariable Long userId,
+                                                                         @RequestParam("page") Integer page,
+                                                                         @RequestParam("size") Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending()); //page * size를 어디서 해야하는가 이부분 다음에 이야기
         return ResponseEntity.ok(CommonResponse.from(postService.findAllPostsByUserId(userId, pageRequest)));
     }
