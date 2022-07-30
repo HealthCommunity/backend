@@ -43,4 +43,8 @@ public final class MultipartUtil {
     public static String createPath(String fileId, String format, String formatCategory) {
         return String.format("%s/%s.%s", formatCategory, fileId, format);
     }
+
+    public static String createPath(String fileId, String format, String formatCategory, VideoCategory videoCategory) {
+        return String.format("%s/%s/%s.%s", formatCategory,videoCategory, fileId, format);
+    }
 }

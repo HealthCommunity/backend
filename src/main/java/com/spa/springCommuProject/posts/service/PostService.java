@@ -3,6 +3,7 @@ package com.spa.springCommuProject.posts.service;
 
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.file.domain.FileDetail;
+import com.spa.springCommuProject.file.domain.VideoCategory;
 import com.spa.springCommuProject.file.service.FileService;
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.domain.PostCategory;
@@ -58,7 +59,7 @@ public class PostService {
             urls = fileService.saveFiles(postRequest.getFiles(), post);
         }
 
-        return new PostResponse(post, user.getNickName(), urls);
+        return new PostResponse(post, urls);
     }
 
     @Transactional
@@ -71,11 +72,11 @@ public class PostService {
                 .postCategory(postCategory)
                 .build();
         postRepository.save(post);
-        String benchUrl = fileService.saveFile(threePostRequest.getBench(), post);
-        String squatUrl = fileService.saveFile(threePostRequest.getSquat(), post);
-        String deadUrl = fileService.saveFile(threePostRequest.getDead(), post);
+        String benchUrl = fileService.saveFile(threePostRequest.getBench(), post, VideoCategory.BENCH);
+        String squatUrl = fileService.saveFile(threePostRequest.getSquat(), post, VideoCategory.SQUAT);
+        String deadUrl = fileService.saveFile(threePostRequest.getDead(), post, VideoCategory.DEAD);
 
-        return new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
+        return new ThreePostResponse(post, benchUrl, squatUrl, deadUrl);
     }
 
     @Transactional
@@ -100,7 +101,7 @@ public class PostService {
         Post post = postRepository.findById(postId).get();
         List<FileDetail> files = post.getFiles();
         List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
-        return new PostResponse(post, post.getUser().getNickName(), urls);
+        return new PostResponse(post, urls);
     }
 
     public PostNickNameDTO findNickNameById(Long postId) {
@@ -137,7 +138,7 @@ public class PostService {
         Post post = postRepository.findById(postId).get();
         Post updatePost = post.update(postRequest.getTitle(), postRequest.getContent());
         List<String> urls = fileService.updateFiles(postRequest.getFiles(), updatePost);
-        return new PostResponse(updatePost, updatePost.getUser().getNickName(), urls);
+        return new PostResponse(updatePost, urls);
     }
 
     @Transactional
@@ -147,7 +148,7 @@ public class PostService {
         String benchUrl = fileService.updateFile(threePostRequest.getBench(), updatePost);
         String squatUrl = fileService.updateFile(threePostRequest.getSquat(), updatePost);
         String deadUrl = fileService.updateFile(threePostRequest.getDead(), updatePost);
-        return new ThreePostResponse(updatePost, updatePost.getUser().getNickName(), benchUrl, squatUrl, deadUrl);
+        return new ThreePostResponse(updatePost, benchUrl, squatUrl, deadUrl);
     }
 
     @Transactional

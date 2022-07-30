@@ -27,14 +27,17 @@ public class ThreePostResponse {
     private String squatUrl;
     private String deadUrl;
 
-    public ThreePostResponse(Post post,  String nickName, String benchUrl, String squatUrl, String deadUrl) {
+    private Long userId;
+
+    public ThreePostResponse(Post post, String benchUrl, String squatUrl, String deadUrl) {
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdDate = post.getCreatedDate();
-        this.nickName = nickName;
+        this.nickName = post.getUser().getNickName();
         this.view = post.getView();
         this.benchUrl = benchUrl;
         this.squatUrl = squatUrl;
         this.deadUrl = deadUrl;
+        this.userId = post.getUser().getId();
     }
 }

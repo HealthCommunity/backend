@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.file.service;//package com.spa.springCommuProject.posts.service;
 
 import com.spa.springCommuProject.file.domain.FileDetail;
+import com.spa.springCommuProject.file.domain.VideoCategory;
 import com.spa.springCommuProject.file.repository.FileRepository;
 import com.spa.springCommuProject.posts.domain.Post;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +22,8 @@ public class FileService {
     private final AmazonS3ResourceStorage amazonS3ResourceStorage;
 
     @Transactional
-    public String saveFile(MultipartFile multipartFile, Post post) {
-        return save(multipartFile, post);
+    public String saveFile(MultipartFile multipartFile, Post post, VideoCategory videoCategory) {
+        return save(multipartFile, post, videoCategory);
     }
 
     @Transactional
@@ -32,6 +33,13 @@ public class FileService {
             urls.add(save(file, post));
         }
         return urls;
+    }
+
+    private String save(MultipartFile file, Post post, VideoCategory videoCategory) {
+        FileDetail fileDetail = FileDetail.multipartOf(file, post, videoCategory);
+        fileRepository.save(fileDetail);
+        amazonS3ResourceStorage.store(fileDetail.getPath(), file);
+        return fileDetail.getUrl();
     }
 
     private String save(MultipartFile file, Post post) {
