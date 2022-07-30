@@ -96,4 +96,11 @@ public class UserApi {
         PostViewDTO postViewDTO = new PostViewDTO("asd", LocalDateTime.now(), "asdz", 1);
         return ResponseEntity.ok(CommonResponse.from(postViewDTO));
     }
+
+    @PostMapping("{userId}/bigthreepower")
+    @ApiOperation("3대력부여")
+    public ResponseEntity<Void> bigThreePower(@PathVariable Long userId, BigThreeDTO bigThreeDTO){
+        userService.updateBigThree(userId, bigThreeDTO);
+        return ResponseEntity.ok().build();
+    }
 }
