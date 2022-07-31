@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +32,11 @@ public class UserApi {
         return ResponseEntity.ok(CommonResponse.from(userService.join(userJoinRequest)));
     }
 
-//    @PostMapping("/login")
-//    @ApiOperation(value = "로그인")
-//    public ResponseEntity<UserLoginDTO> login(UserLoginDTO userLoginDTO){
-//        UserLoginDTO loginDTO = userService.login(userLoginDTO);
-//
-//        return new ResponseEntity<>(loginDTO, HttpStatus.OK);
-//    }
+    @PostMapping("/login")
+    @ApiOperation(value = "로그인")
+    public ResponseEntity<Void> login(UserLoginDTO userLoginDTO){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping()
     @ApiOperation(value = "마이페이지")
