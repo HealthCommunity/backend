@@ -99,10 +99,11 @@ public class UserApi {
         return ResponseEntity.ok(CommonResponse.from(postViewDTO));
     }
 
-    @PostMapping("{userId}/bigthreepower")
+    @PostMapping("/bigthreepower")
     @ApiOperation("3대력부여")
-    public ResponseEntity<Void> bigThreePower(@PathVariable Long userId, BigThreeDTO bigThreeDTO){
-        userService.updateBigThree(userId, bigThreeDTO);
+    public ResponseEntity<Void> bigThreePower(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+                                              BigThreeDTO bigThreeDTO){
+        userService.updateBigThree(principalUserDetails, bigThreeDTO);
         return ResponseEntity.ok().build();
     }
 }
