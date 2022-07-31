@@ -17,9 +17,5 @@ public class PostRequest {
     @NotBlank
     private String content;
 
-    private String nickName;
-
-    private Long userId;
-
     private List<MultipartFile> files = new ArrayList<>();
 }

@@ -62,6 +62,29 @@ public class FileDetail {
                 .build();
     }
 
+    public static FileDetail multipartOf(MultipartFile multipartFile, Post post, VideoCategory videoCategory) {
+        final String uploadName = MultipartUtil.createFileUploadFileName();
+        final String format = MultipartUtil.getFormat(multipartFile.getContentType());
+        String formatCategory;
+        if(format.equalsIgnoreCase("JPEG")||format.equalsIgnoreCase("JPG")||format.equalsIgnoreCase("PNG")
+                ||format.equalsIgnoreCase("GIF") ||format.equalsIgnoreCase("PSD")
+                ||format.equalsIgnoreCase("PDF")||format.equalsIgnoreCase("RAW")||format.equalsIgnoreCase("TIF")){
+            formatCategory = FileCategory.IMAGE.name();
+        }else{
+            formatCategory = FileCategory.VIDEO.name();
+        }
+
+        return FileDetail.builder()
+                .uploadFileName(uploadName)
+                .storeFileName(multipartFile.getOriginalFilename())
+                .format(format)
+                .path(MultipartUtil.createPath(uploadName, format, formatCategory, videoCategory))
+                .fileCategory(FileCategory.valueOf(formatCategory))
+                .bytes(multipartFile.getSize())
+                .post(post)
+                .build();
+    }
+
     public String getUrl(){
         return "healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/" + this.getPath();
     }

@@ -16,10 +16,6 @@ public class ThreePostRequest {
     @NotBlank
     private String content;
 
-    private String nickName;
-
-    private Long userId;
-
     private MultipartFile bench;
 
     private MultipartFile squat;

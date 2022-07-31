@@ -1,7 +1,9 @@
 package com.spa.springCommuProject.posts.service;
 
 
+import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.file.domain.FileDetail;
+import com.spa.springCommuProject.file.domain.VideoCategory;
 import com.spa.springCommuProject.file.service.FileService;
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.domain.PostCategory;
@@ -35,17 +37,17 @@ public class PostService {
         return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
     }
 
-    public List<PostViewDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
-        User findUser = userRepository.findById(userId).get();
+    public List<PostViewDTO> findAllPostsByUserId(PrincipalUserDetails principalUserDetails, Pageable pageable) {
+        User findUser = principalUserDetails.getUser();
         List<Post> pagingPosts = postRepository.findByUserOrderByCreatedDateDesc(findUser, pageable);
         return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
     }
 
 
     @Transactional
-    public PostResponse save(PostRequest postRequest, PostCategory postCategory) {
+    public PostResponse save(PostRequest postRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
         List<String> urls = new ArrayList<>();
-        User user = userRepository.findById(postRequest.getUserId()).orElseThrow();
+        User user = principalUserDetails.getUser();
         Post post = Post.builder()
                 .user(user)
                 .title(postRequest.getTitle())
@@ -57,12 +59,12 @@ public class PostService {
             urls = fileService.saveFiles(postRequest.getFiles(), post);
         }
 
-        return new PostResponse(post, user.getNickName(), urls);
+        return new PostResponse(post, urls);
     }
 
     @Transactional
-    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory) {
-        User user = userRepository.findById(threePostRequest.getUserId()).orElseThrow();
+    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory,PrincipalUserDetails principalUserDetails) {
+        User user = principalUserDetails.getUser();
         Post post = Post.builder()
                 .user(user)
                 .title(threePostRequest.getTitle())
@@ -70,11 +72,11 @@ public class PostService {
                 .postCategory(postCategory)
                 .build();
         postRepository.save(post);
-        String benchUrl = fileService.save(threePostRequest.getBench(), post);
-        String squatUrl = fileService.save(threePostRequest.getSquat(), post);
-        String deadUrl = fileService.save(threePostRequest.getDead(), post);
+        String benchUrl = fileService.saveFile(threePostRequest.getBench(), post, VideoCategory.BENCH);
+        String squatUrl = fileService.saveFile(threePostRequest.getSquat(), post, VideoCategory.SQUAT);
+        String deadUrl = fileService.saveFile(threePostRequest.getDead(), post, VideoCategory.DEAD);
 
-        return new ThreePostResponse(post, user.getNickName(), benchUrl, squatUrl, deadUrl);
+        return new ThreePostResponse(post, benchUrl, squatUrl, deadUrl);
     }
 
     public List<PostViewDTO> searchTitle(String keyword) {
@@ -97,7 +99,7 @@ public class PostService {
         Post post = postRepository.findById(postId).get();
         List<FileDetail> files = post.getFiles();
         List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
-        return new PostResponse(post, post.getUser().getNickName(), urls);
+        return new PostResponse(post, urls);
     }
 
     public PostNickNameDTO findNickNameById(Long postId) {
@@ -130,10 +132,21 @@ public class PostService {
     }
 
     @Transactional
-    public PostDTO updatePost(Long postId, PostDTO postDTO) {
+    public PostResponse updatePost(Long postId, PostRequest postRequest) {
         Post post = postRepository.findById(postId).get();
-        Post updatePost = post.update(postDTO.getTitle(), postDTO.getContent()); //나중에 file추가
-        return updatePost.convertToDTO();
+        Post updatePost = post.update(postRequest.getTitle(), postRequest.getContent());
+        List<String> urls = fileService.updateFiles(postRequest.getFiles(), updatePost);
+        return new PostResponse(updatePost, urls);
+    }
+
+    @Transactional
+    public ThreePostResponse threeUpdatePost(Long postId, ThreePostRequest threePostRequest) {
+        Post post = postRepository.findById(postId).get();
+        Post updatePost = post.update(threePostRequest.getTitle(), threePostRequest.getContent());
+        String benchUrl = fileService.updateFile(threePostRequest.getBench(), updatePost);
+        String squatUrl = fileService.updateFile(threePostRequest.getSquat(), updatePost);
+        String deadUrl = fileService.updateFile(threePostRequest.getDead(), updatePost);
+        return new ThreePostResponse(updatePost, benchUrl, squatUrl, deadUrl);
     }
 
     @Transactional

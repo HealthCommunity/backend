@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.user.service;
 
+import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.user.domain.BigThreePower;
 import com.spa.springCommuProject.user.domain.Provider;
 import com.spa.springCommuProject.user.domain.Role;
@@ -65,7 +66,7 @@ public class UserService {
 
     public UserUpdateDTO findUpdateById(Long userId) {
         User findUser = userRepository.findById(userId).get();
-        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(findUser.getNickName(), findUser.getPassword());
+        UserUpdateDTO userUpdateDTO = new UserUpdateDTO(findUser.getLoginId(), findUser.getNickName(), findUser.getPassword());
         return userUpdateDTO;
     }
 
@@ -82,14 +83,14 @@ public class UserService {
     }
 
     @Transactional
-    public void updateUser(Long userId, UserUpdateDTO userUpdateDTO) {
-        User findUser = userRepository.findById(userId).get();
+    public void updateUser(PrincipalUserDetails principalUserDetails, UserUpdateDTO userUpdateDTO) {
+        User findUser = principalUserDetails.getUser();
         findUser.update(userUpdateDTO.getNickName(), userUpdateDTO.getPassword());
     }
 
     @Transactional
-    public void deleteUser(Long userId) {
-        User findUser = userRepository.findById(userId).get();
+    public void deleteUser(PrincipalUserDetails principalUserDetails) {
+        User findUser = principalUserDetails.getUser();
         findUser.delete();
     }
 

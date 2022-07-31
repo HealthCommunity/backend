@@ -1,12 +1,14 @@
 package com.spa.springCommuProject.posts.controller;
 
 import com.spa.springCommuProject.common.CommonResponse;
+import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -23,14 +25,15 @@ public class ThreePowerPostApi {
     @ApiOperation(value = "페이징된 삼대력게시판 목록")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> threePowerPostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {
-        List<PostViewDTO> pagingPostsAndCount = postService.findPagingPosts(PostCategory.THREEPOWERPOST, page, size);
-        return ResponseEntity.ok(CommonResponse.from(pagingPostsAndCount));
+        List<PostViewDTO> posts = postService.findPagingPosts(PostCategory.THREEPOWERPOST, page, size);
+        return ResponseEntity.ok(CommonResponse.from(posts));
     }
 
     @PostMapping()
     @ApiOperation(value = "삼대력게시글 생성")
-    public ResponseEntity<CommonResponse<ThreePostResponse>> createThreePowerPost(ThreePostRequest threePostRequest){
-        return ResponseEntity.ok(CommonResponse.from(postService.threeSave(threePostRequest, PostCategory.THREEPOWERPOST)));
+    public ResponseEntity<CommonResponse<ThreePostResponse>> createThreePowerPost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+                                                                                  ThreePostRequest threePostRequest){
+        return ResponseEntity.ok(CommonResponse.from(postService.threeSave(threePostRequest, PostCategory.THREEPOWERPOST, principalUserDetails)));
     }
 
     @GetMapping("/{postId}")
@@ -48,11 +51,9 @@ public class ThreePowerPostApi {
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "삼대력게시글 수정")
-    public ResponseEntity<CommonResponse<PostDTO>> editThreePowerPost(@PathVariable Long postId,
-                               @Valid PostDTO postDTO) {
-        PostDTO updatePostDTO = postService.updatePost(postId, postDTO);
-
-        return ResponseEntity.ok(CommonResponse.from(updatePostDTO));
+    public ResponseEntity<CommonResponse<ThreePostResponse>> editThreePowerPost(@PathVariable Long postId,
+                                                                      @Valid ThreePostRequest threePostRequest) {
+        return ResponseEntity.ok(CommonResponse.from(postService.threeUpdatePost(postId, threePostRequest)));
     }
 
     @GetMapping("/{postId}/delete")

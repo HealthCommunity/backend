@@ -9,6 +9,8 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class UserUpdateDTO {
 
+    private String loginId;
+
     @NotBlank
     private String nickName;
 

@@ -29,12 +29,12 @@ public class PostResponse {
 
     private LocalDateTime createdDate;
 
-    public PostResponse(Post post,  String nickName, List<String> urls) {
+    public PostResponse(Post post, List<String> urls) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdDate = post.getCreatedDate();
-        this.nickName = nickName;
+        this.nickName = post.getUser().getNickName();
         this.view = post.getView();
         this.urls =urls;
     }
