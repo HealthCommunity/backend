@@ -37,8 +37,8 @@ public class PostService {
         return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
     }
 
-    public List<PostViewDTO> findAllPostsByUserId(Long userId, Pageable pageable) {
-        User findUser = userRepository.findById(userId).get();
+    public List<PostViewDTO> findAllPostsByUserId(PrincipalUserDetails principalUserDetails, Pageable pageable) {
+        User findUser = principalUserDetails.getUser();
         List<Post> pagingPosts = postRepository.findByUserOrderByCreatedDateDesc(findUser, pageable);
         return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
     }

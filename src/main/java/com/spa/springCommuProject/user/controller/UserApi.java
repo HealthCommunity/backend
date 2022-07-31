@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.user.controller;
 
 import com.spa.springCommuProject.common.CommonResponse;
+import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.service.PostService;
 import com.spa.springCommuProject.user.dto.*;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -37,58 +39,59 @@ public class UserApi {
 //        return new ResponseEntity<>(loginDTO, HttpStatus.OK);
 //    }
 
-    @GetMapping("/{userId}")
+    @GetMapping()
     @ApiOperation(value = "마이페이지")
-    public ResponseEntity<CommonResponse<UserPageDTO>> myPage(@PathVariable Long userId) {
+    public ResponseEntity<CommonResponse<UserPageDTO>> myPage(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails) {
 
-        UserPageDTO userPageDto = userService.findPageById(userId);
+        UserPageDTO userPageDTO = principalUserDetails.getUser().convertToUserPageDTO();
 
-        return ResponseEntity.ok(CommonResponse.from(userPageDto));
+        return ResponseEntity.ok(CommonResponse.from(userPageDTO));
 
     }
 
-    @GetMapping("/{userId}/edit")
+    @GetMapping("/edit")
     @ApiOperation(value = "내 정보 수정 폼")
-    public ResponseEntity<CommonResponse<UserUpdateDTO>> editForm(@PathVariable Long userId) {
+    public ResponseEntity<CommonResponse<UserPageDTO>> editForm(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails) {
 
-        UserUpdateDTO userUpdateDTO = userService.findUpdateById(userId);
+        UserPageDTO userPageDTO = principalUserDetails.getUser().convertToUserPageDTO();
 
-        return ResponseEntity.ok(CommonResponse.from(userUpdateDTO));
+        return ResponseEntity.ok(CommonResponse.from(userPageDTO));
     }
 
-    @PostMapping("/{userId}/edit")
+    @PostMapping("/edit")
     @ApiOperation(value = "내 정보 수정")
-    public ResponseEntity<Void> edit(@PathVariable Long userId, UserUpdateDTO userUpdateDTO) {
+    public ResponseEntity<Void> edit(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails
+            , UserUpdateDTO userUpdateDTO) {
 
-        userService.updateUser(userId, userUpdateDTO);
+        userService.updateUser(principalUserDetails, userUpdateDTO);
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{userId}/delete")
+    @GetMapping("/delete")
     @ApiOperation(value = "회원 탈퇴 폼")
-    public ResponseEntity<CommonResponse<UserIdDTO>> deleteForm(@PathVariable Long userId) {
-        UserIdDTO userIdDto = userService.findLoginIdById(userId);
+    public ResponseEntity<CommonResponse<UserIdDTO>> deleteForm(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails) {
+        UserIdDTO userIdDTO = principalUserDetails.getUser().convertToUserIdDTO();
 
-        return ResponseEntity.ok(CommonResponse.from(userIdDto));
+        return ResponseEntity.ok(CommonResponse.from(userIdDTO));
     }
 
-    @PostMapping("/{userId}/delete")
+    @PostMapping("/delete")
     @ApiOperation(value = "회원 탈퇴")
-    public ResponseEntity<Void> delete(@PathVariable Long userId) {
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails) {
 
-        userService.deleteUser(userId);
+        userService.deleteUser(principalUserDetails);
 
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{userId}/posts")
+    @GetMapping("/posts")
     @ApiOperation(value = "내 글 목록")
-    public ResponseEntity<CommonResponse<List<PostViewDTO>>> myPostsList(@PathVariable Long userId,
+    public ResponseEntity<CommonResponse<List<PostViewDTO>>> myPostsList(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
                                                                          @RequestParam("page") Integer page,
                                                                          @RequestParam("size") Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending()); //page * size를 어디서 해야하는가 이부분 다음에 이야기
-        return ResponseEntity.ok(CommonResponse.from(postService.findAllPostsByUserId(userId, pageRequest)));
+        return ResponseEntity.ok(CommonResponse.from(postService.findAllPostsByUserId(principalUserDetails, pageRequest)));
     }
 
     @GetMapping("/asd")
