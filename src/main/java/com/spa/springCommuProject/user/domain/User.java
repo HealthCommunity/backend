@@ -41,7 +41,7 @@ public class User {
     @Embedded
     private BigThreePower bigThreePower;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Post> posts = new ArrayList<>();
 

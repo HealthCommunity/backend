@@ -3,7 +3,10 @@ package com.spa.springCommuProject.posts.controller;
 import com.spa.springCommuProject.common.CommonResponse;
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.posts.domain.PostCategory;
-import com.spa.springCommuProject.posts.dto.*;
+import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
+import com.spa.springCommuProject.posts.dto.PostRequest;
+import com.spa.springCommuProject.posts.dto.PostResponse;
+import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -68,5 +71,6 @@ public class ExercisePostApi {
         postService.deletePost(postId);
         return ResponseEntity.ok().build();
     }
+
 
 }

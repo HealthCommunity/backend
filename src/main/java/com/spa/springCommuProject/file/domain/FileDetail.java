@@ -23,7 +23,7 @@ public class FileDetail {
     @Column(name = "file_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     @JsonBackReference
     private Post post;

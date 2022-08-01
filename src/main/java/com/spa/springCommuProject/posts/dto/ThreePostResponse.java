@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ThreePostResponse {
 
+    private Long id;
     @NotBlank
     private String title;
 
@@ -30,6 +31,7 @@ public class ThreePostResponse {
     private Long userId;
 
     public ThreePostResponse(Post post, String benchUrl, String squatUrl, String deadUrl) {
+        this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdDate = post.getCreatedDate();

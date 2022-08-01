@@ -37,7 +37,7 @@ public class Post {
     protected Post() {
     }
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     private List<FileDetail> files = new ArrayList<>();
 

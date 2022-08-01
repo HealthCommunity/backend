@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -27,7 +28,7 @@ public class FileService {
     }
 
     @Transactional
-    public List<String> saveFiles(List<MultipartFile> files, Post post){
+    public List<String> saveFiles(List<MultipartFile> files, Post post) {
         List<String> urls = new ArrayList<>();
         for (MultipartFile file : files) {
             urls.add(save(file, post));
@@ -50,24 +51,54 @@ public class FileService {
     }
 
     @Transactional
-    public List<String> updateFiles(List<MultipartFile> multipartFiles, Post post){
-        List<String> urls = new ArrayList<>();
+    public List<String> updateFiles(List<MultipartFile> multipartFiles, Post post) {
         List<FileDetail> files = post.getFiles();
-        for (MultipartFile multipartFile : multipartFiles) {
-
+        List<String> saveFilesName = files.stream().map(x -> x.getStoreFileName()).collect(Collectors.toList());
+        List<String> newFilesName = multipartFiles.stream().map(x -> x.getOriginalFilename()).collect(Collectors.toList());
+        for (String s : saveFilesName) {
+            System.out.println("원래 있던 파일명 = " + s);
+        }
+        for (String s : newFilesName) {
+            System.out.println("새로 올린 파일명 = " + s);
+        }
+        for (FileDetail file : files) {
+            if (newFilesName.contains(file.getStoreFileName())) {
+                System.out.println("원래 있던 애들은 continue :" + file.getStoreFileName());
+                continue;
+            } else {
+                System.out.println("수정에 없으면 delete :" + file.getStoreFileName());
+                fileRepository.deleteById(file.getId());
+            }
         }
 
+        for (MultipartFile multipartFile : multipartFiles) {
+            if (saveFilesName.contains(multipartFile.getOriginalFilename())) {
+                continue;
+            } else {
+                save(multipartFile, post);
+            }
+        }
+        List<FileDetail> updatePostFiles = fileRepository.findByPostId(post.getId());
+        List<String> urls = updatePostFiles.stream().map(x -> x.getUrl()).collect(Collectors.toList());
         return urls;
     }
 
     @Transactional
-    public String updateFile(MultipartFile multipartFile, Post post){
-        return update(multipartFile, post);
+    public String updateFile(MultipartFile multipartFile, Post post, VideoCategory videoCategory) {
+        return update(multipartFile, post, videoCategory);
     }
 
-    public String update(MultipartFile multipartFile, Post post){
-        return "update";
+    public String update(MultipartFile multipartFile, Post post, VideoCategory videoCategory) {
+        List<FileDetail> files = post.getFiles();
+        FileDetail fileDetail = files.stream().filter(x -> x.getPath().contains(videoCategory.name())).findAny().get();
+        if (!fileDetail.getStoreFileName().equals(multipartFile.getOriginalFilename())) { //원래 있던거랑 새로온거랑 다르면
+            System.out.println("삭제");
+            fileRepository.delete(fileDetail); //원래 있던거 삭제
+            return save(multipartFile, post, videoCategory);
+        } else { //수정안했으면 그대로
+            System.out.println("그대로");
+            return fileDetail.getUrl();
+        }
     }
-
 
 }

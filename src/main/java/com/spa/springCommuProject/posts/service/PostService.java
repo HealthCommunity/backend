@@ -44,27 +44,29 @@ public class PostService {
     }
 
 
-    @Transactional
-    public PostResponse save(PostRequest postRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
-        List<String> urls = new ArrayList<>();
-        User user = principalUserDetails.getUser();
-        Post post = Post.builder()
-                .user(user)
-                .title(postRequest.getTitle())
-                .content(postRequest.getContent())
-                .postCategory(postCategory)
-                .build();
-        postRepository.save(post);
-        if(!postRequest.getFiles().isEmpty()) {
-            urls = fileService.saveFiles(postRequest.getFiles(), post);
-        }
+        @Transactional
+        public PostResponse save(PostRequest postRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
+            List<String> urls = new ArrayList<>();
+            //User user = principalUserDetails.getUser();
+            User user = userRepository.findById(1L).get();
+            Post post = Post.builder()
+                    .user(user)
+                    .title(postRequest.getTitle())
+                    .content(postRequest.getContent())
+                    .postCategory(postCategory)
+                    .build();
+            postRepository.save(post);
+            if(!postRequest.getFiles().isEmpty()) {
+                urls = fileService.saveFiles(postRequest.getFiles(), post);
+            }
 
-        return new PostResponse(post, urls);
+            return new PostResponse(post, urls);
     }
 
     @Transactional
     public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory,PrincipalUserDetails principalUserDetails) {
-        User user = principalUserDetails.getUser();
+        //User user = principalUserDetails.getUser();
+        User user = userRepository.findById(1L).get();
         Post post = Post.builder()
                 .user(user)
                 .title(threePostRequest.getTitle())
@@ -143,9 +145,9 @@ public class PostService {
     public ThreePostResponse threeUpdatePost(Long postId, ThreePostRequest threePostRequest) {
         Post post = postRepository.findById(postId).get();
         Post updatePost = post.update(threePostRequest.getTitle(), threePostRequest.getContent());
-        String benchUrl = fileService.updateFile(threePostRequest.getBench(), updatePost);
-        String squatUrl = fileService.updateFile(threePostRequest.getSquat(), updatePost);
-        String deadUrl = fileService.updateFile(threePostRequest.getDead(), updatePost);
+        String benchUrl = fileService.updateFile(threePostRequest.getBench(), updatePost, VideoCategory.BENCH);
+        String squatUrl = fileService.updateFile(threePostRequest.getSquat(), updatePost, VideoCategory.SQUAT);
+        String deadUrl = fileService.updateFile(threePostRequest.getDead(), updatePost, VideoCategory.DEAD);
         return new ThreePostResponse(updatePost, benchUrl, squatUrl, deadUrl);
     }
 
