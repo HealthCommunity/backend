@@ -32,7 +32,7 @@ public class PostService {
     private final FileService fileService;
 
     public List<PostViewDTO> findPagingPosts(PostCategory postCategory, Integer page, Integer size) {
-        PageRequest pageRequest =PageRequest.of(page, size, Sort.by("id").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
         List<Post> pagingPosts = postRepository.findByPostCategory(postCategory, pageRequest);
         return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
     }
@@ -44,27 +44,27 @@ public class PostService {
     }
 
 
-        @Transactional
-        public PostResponse save(PostRequest postRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
-            List<String> urls = new ArrayList<>();
-            //User user = principalUserDetails.getUser();
-            User user = userRepository.findById(1L).get();
-            Post post = Post.builder()
-                    .user(user)
-                    .title(postRequest.getTitle())
-                    .content(postRequest.getContent())
-                    .postCategory(postCategory)
-                    .build();
-            postRepository.save(post);
-            if(!postRequest.getFiles().isEmpty()) {
-                urls = fileService.saveFiles(postRequest.getFiles(), post);
-            }
+    @Transactional
+    public PostResponse save(PostRequest postRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
+        List<String> urls = new ArrayList<>();
+        //User user = principalUserDetails.getUser();
+        User user = userRepository.findById(1L).get();
+        Post post = Post.builder()
+                .user(user)
+                .title(postRequest.getTitle())
+                .content(postRequest.getContent())
+                .postCategory(postCategory)
+                .build();
+        postRepository.save(post);
+        if (!postRequest.getFiles().isEmpty()) {
+            urls = fileService.saveFiles(postRequest.getFiles(), post);
+        }
 
-            return new PostResponse(post, urls);
+        return new PostResponse(post, urls);
     }
 
     @Transactional
-    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory,PrincipalUserDetails principalUserDetails) {
+    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
         //User user = principalUserDetails.getUser();
         User user = userRepository.findById(1L).get();
         Post post = Post.builder()
@@ -111,7 +111,7 @@ public class PostService {
 
     public MainPageDTO mainPagePosts() {
         MainPageDTO mainPageDTO = new MainPageDTO();
-        PageRequest pageRequest =PageRequest.of(0, 30, Sort.by("createdDate").descending());
+        PageRequest pageRequest = PageRequest.of(0, 30, Sort.by("createdDate").descending());
         mainPageDTO.setFreeposts(postRepository.findByPostCategory(PostCategory.FREEPOST, pageRequest).stream().
                 map(Post::convertToMainPostResponse)
                 .collect(Collectors.toList()));

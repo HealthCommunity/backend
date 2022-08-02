@@ -24,7 +24,7 @@ public class FreePostApi {
     @GetMapping("/list")
     @ApiOperation(value = "페이징된 자유게시판 목록")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> freePostListPage(@RequestParam("page") Integer page,
-                                                                @RequestParam("size") Integer size) {
+                                                                              @RequestParam("size") Integer size) {
         List<PostViewDTO> posts = postService.findPagingPosts(PostCategory.FREEPOST, page, size);
         return ResponseEntity.ok(CommonResponse.from(posts));
     }
@@ -32,7 +32,7 @@ public class FreePostApi {
     @PostMapping()
     @ApiOperation(value = "자유게시글 생성")
     public ResponseEntity<CommonResponse<PostResponse>> createFreePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
-                                                                       PostRequest postRequest){
+                                                                       PostRequest postRequest) {
         return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.FREEPOST, principalUserDetails)));
     }
 
@@ -52,7 +52,7 @@ public class FreePostApi {
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "자유게시글 수정")
     public ResponseEntity<CommonResponse<PostResponse>> editFreePost(@PathVariable Long postId,
-                                                                @Valid PostRequest postRequest) {
+                                                                     @Valid PostRequest postRequest) {
         return ResponseEntity.ok(CommonResponse.from(postService.updatePost(postId, postRequest)));
     }
 

@@ -55,18 +55,11 @@ public class FileService {
         List<FileDetail> files = post.getFiles();
         List<String> saveFilesName = files.stream().map(x -> x.getStoreFileName()).collect(Collectors.toList());
         List<String> newFilesName = multipartFiles.stream().map(x -> x.getOriginalFilename()).collect(Collectors.toList());
-        for (String s : saveFilesName) {
-            System.out.println("원래 있던 파일명 = " + s);
-        }
-        for (String s : newFilesName) {
-            System.out.println("새로 올린 파일명 = " + s);
-        }
+
         for (FileDetail file : files) {
             if (newFilesName.contains(file.getStoreFileName())) {
-                System.out.println("원래 있던 애들은 continue :" + file.getStoreFileName());
                 continue;
             } else {
-                System.out.println("수정에 없으면 delete :" + file.getStoreFileName());
                 fileRepository.deleteById(file.getId());
             }
         }
