@@ -15,7 +15,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOriginPatterns("http://localhost:3000/",
                         "http://localhost:8080/",
                         "http://localhost:3200/",
-                        "http://54.166.132.169:3200/")
+                        "http://54.166.132.169:3200/",
+                        "http://54.166.132.169:8080/")
                 .allowedHeaders("*") // 어떤 헤더들을 허용할 것인지
                 .allowedHeaders("Session")
                 .allowedMethods("*") // 어떤 메서드를 허용할 것인지 (GET, POST...)
