@@ -48,26 +48,35 @@ public class ExercisePostApi {
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "운동게시글 수정 폼")
-    public ResponseEntity<CommonResponse<PostResponse>> editExercisePostForm(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostResponse>> editExercisePostForm(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails, @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "게시글 수정")
-    public ResponseEntity<CommonResponse<PostResponse>> editExercisePost(@PathVariable Long postId,
-                                                                    @Valid PostRequest postRequest) {
+    public ResponseEntity<CommonResponse<PostResponse>> editExercisePost(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId,
+        @Valid PostRequest postRequest) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.updatePost(postId, postRequest)));
     }
 
     @GetMapping("/{postId}/delete")
     @ApiOperation(value = "운동게시글 삭제 폼") //닉네임만 넘겨주기 ~님 정말 삭제하시겠습니까?
-    public ResponseEntity<CommonResponse<PostNickNameDTO>> deleteExercisePostForm(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostNickNameDTO>> deleteExercisePostForm(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails, @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.findNickNameById(postId)));
     }
 
     @PostMapping("{postId}/delete")
     @ApiOperation(value = "운동게시글 삭제")
-    public ResponseEntity<Void> deleteExercisePost(@PathVariable Long postId) {
+    public ResponseEntity<Void> deleteExercisePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         postService.deletePost(postId);
         return ResponseEntity.ok().build();
     }

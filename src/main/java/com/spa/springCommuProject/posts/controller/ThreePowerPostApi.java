@@ -45,26 +45,37 @@ public class ThreePowerPostApi {
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "삼대력게시글 수정 폼")
-    public ResponseEntity<CommonResponse<PostResponse>> editThreePowerPostForm(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostResponse>> editThreePowerPostForm(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "삼대력게시글 수정")
-    public ResponseEntity<CommonResponse<ThreePostResponse>> editThreePowerPost(@PathVariable Long postId,
-                                                                      @Valid ThreePostRequest threePostRequest) {
+    public ResponseEntity<CommonResponse<ThreePostResponse>> editThreePowerPost(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId,
+        @Valid ThreePostRequest threePostRequest) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.threeUpdatePost(postId, threePostRequest)));
     }
 
     @GetMapping("/{postId}/delete")
     @ApiOperation(value = "삼대력게시글 삭제 폼") //닉네임만 넘겨주기 ~님 정말 삭제하시겠습니까?
-    public ResponseEntity<CommonResponse<PostNickNameDTO>> deleteThreePowerPostForm(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostNickNameDTO>> deleteThreePowerPostForm(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.findNickNameById(postId)));
     }
 
     @PostMapping("{postId}/delete")
     @ApiOperation(value = "삼대력게시글 삭제")
-    public ResponseEntity<Void> deleteThreePowerPost(@PathVariable Long postId) {
+    public ResponseEntity<Void> deleteThreePowerPost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         postService.deletePost(postId);
         return ResponseEntity.ok().build();
     }

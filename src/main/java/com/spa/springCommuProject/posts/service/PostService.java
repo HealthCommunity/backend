@@ -11,6 +11,7 @@ import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +49,6 @@ public class PostService {
     public PostResponse save(PostRequest postRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
         List<String> urls = new ArrayList<>();
         User user = principalUserDetails.getUser();
-        //User user = userRepository.findById(1L).get();
         Post post = Post.builder()
                 .user(user)
                 .title(postRequest.getTitle())
@@ -66,7 +66,6 @@ public class PostService {
     @Transactional
     public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
         User user = principalUserDetails.getUser();
-        //User user = userRepository.findById(1L).get();
         Post post = Post.builder()
                 .user(user)
                 .title(threePostRequest.getTitle())
@@ -155,6 +154,16 @@ public class PostService {
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId).get();
         postRepository.delete(post);
+    }
+
+    public void validateUser(Long postId, Long userId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        Post post = optionalPost.orElseThrow(IllegalAccessError::new);
+
+        Long postUserId = post.getUser().getId();
+        if (!postUserId.equals(userId)) {
+            throw new IllegalArgumentException("해당 게시글 권한이 없습니다.");
+        }
     }
 
 }

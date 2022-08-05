@@ -45,26 +45,37 @@ public class FreePostApi {
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "자유게시글 수정 폼")
-    public ResponseEntity<CommonResponse<PostResponse>> editFreePostForm(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostResponse>> editFreePostForm(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "자유게시글 수정")
-    public ResponseEntity<CommonResponse<PostResponse>> editFreePost(@PathVariable Long postId,
-                                                                     @Valid PostRequest postRequest) {
+    public ResponseEntity<CommonResponse<PostResponse>> editFreePost(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId,
+        @Valid PostRequest postRequest) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.updatePost(postId, postRequest)));
     }
 
     @GetMapping("/{postId}/delete")
     @ApiOperation(value = "자유게시글 삭제 폼") //닉네임만 넘겨주기 ~님 정말 삭제하시겠습니까?
-    public ResponseEntity<CommonResponse<PostNickNameDTO>> deleteFreePostForm(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostNickNameDTO>> deleteFreePostForm(
+        @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         return ResponseEntity.ok(CommonResponse.from(postService.findNickNameById(postId)));
     }
 
     @PostMapping("{postId}/delete")
     @ApiOperation(value = "자유게시글 삭제")
-    public ResponseEntity<Void> deleteFreePost(@PathVariable Long postId) {
+    public ResponseEntity<Void> deleteFreePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+        @PathVariable Long postId) {
+        postService.validateUser(postId, principalUserDetails.getUser().getId());
         postService.deletePost(postId);
         return ResponseEntity.ok().build();
     }
