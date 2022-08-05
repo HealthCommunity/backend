@@ -22,9 +22,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PrincipalOauth2UserService principalOauth2UserService;
 
-    @Autowired
-    private CustumLoginSuccessHandler custumLoginSuccessHandler;
-
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
@@ -51,7 +48,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JsonUsernamePasswordAuthenticationFilter filter = new JsonUsernamePasswordAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManager());
         filter.setFilterProcessesUrl("/api/user/login");
-        filter.setAuthenticationSuccessHandler(custumLoginSuccessHandler);
         return filter;
     }
 
