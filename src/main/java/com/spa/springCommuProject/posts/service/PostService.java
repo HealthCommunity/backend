@@ -47,8 +47,8 @@ public class PostService {
     @Transactional
     public PostResponse save(PostRequest postRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
         List<String> urls = new ArrayList<>();
-        //User user = principalUserDetails.getUser();
-        User user = userRepository.findById(1L).get();
+        User user = principalUserDetails.getUser();
+        //User user = userRepository.findById(1L).get();
         Post post = Post.builder()
                 .user(user)
                 .title(postRequest.getTitle())
@@ -65,8 +65,8 @@ public class PostService {
 
     @Transactional
     public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
-        //User user = principalUserDetails.getUser();
-        User user = userRepository.findById(1L).get();
+        User user = principalUserDetails.getUser();
+        //User user = userRepository.findById(1L).get();
         Post post = Post.builder()
                 .user(user)
                 .title(threePostRequest.getTitle())
