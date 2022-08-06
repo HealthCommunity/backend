@@ -11,7 +11,7 @@ import java.util.Arrays;
 @AllArgsConstructor
 @Getter
 public enum CodeAndDetails {
-    SUCCESS("20000", "성공", null),
+    SUCCESS("200", "성공", null),
     NOT_FOUND_API("0002", "해당 경로에 대한 응답 API를 찾을 수 없습니다.", NoHandlerFoundException.class),
     ;
 
