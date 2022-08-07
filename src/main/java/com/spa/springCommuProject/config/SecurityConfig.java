@@ -30,17 +30,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
-            .csrf().disable().authorizeRequests()
-            .antMatchers("/api/user/join").permitAll()
+                .csrf().disable().authorizeRequests()
+                .antMatchers("/api/user/join").permitAll()
 //            .antMatchers("/api/**").authenticated();
-            .antMatchers("/api/**").permitAll();
+                .antMatchers("/api/**").permitAll();
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.oauth2Login()
-            .userInfoEndpoint()
-            .userService(principalOauth2UserService);
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService);
         http.headers()
-            .frameOptions()
-            .sameOrigin();
+                .frameOptions()
+                .sameOrigin();
+        http.logout().
+                logoutUrl("/api/user/logout").
+                deleteCookies("JSESSIONID");
     }
 
     @Bean
