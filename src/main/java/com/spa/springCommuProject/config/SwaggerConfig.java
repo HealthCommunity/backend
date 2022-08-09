@@ -1,4 +1,4 @@
-package com.spa.springCommuProject;
+package com.spa.springCommuProject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +24,9 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiInfo() {
-        return new ApiInfoBuilder().title("HealthCommunity")
+        return new ApiInfoBuilder()
+                .title("HealthCommunity")
                 .description("HealthCommunity API Test for Swagger Documentation")
-                .termsOfServiceUrl("https://wangtak.tistory.com")
-                .license("WangTak")
-                .licenseUrl("https://wangtak.tistory.com").version("1.0").build();
+                .version("1.0").build();
     }
 }

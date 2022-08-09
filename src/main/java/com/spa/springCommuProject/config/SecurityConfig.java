@@ -31,9 +31,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .csrf().disable().authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/swagger-ui.html/**").permitAll()
+                .antMatchers("/api/user/login").permitAll()
                 .antMatchers("/api/user/join").permitAll()
-//            .antMatchers("/api/**").authenticated();
-                .antMatchers("/api/**").permitAll();
+                .antMatchers("/api/exercisepost/list").permitAll()
+                .antMatchers("/api/exercisepost/{postId}").permitAll()
+                .antMatchers("/api/freepost/list").permitAll()
+                .antMatchers("/api/freepost/{postId}").permitAll()
+                .antMatchers("/api/threepowerpost/list").permitAll()
+                .antMatchers("/api/threepowerpost/{postId}").permitAll()
+                .anyRequest().authenticated();
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.oauth2Login()
                 .userInfoEndpoint()
