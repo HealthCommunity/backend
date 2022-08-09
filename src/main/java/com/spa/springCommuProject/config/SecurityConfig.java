@@ -25,6 +25,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+        web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
+                .and().ignoring().antMatchers("/v2/api-docs",  "/configuration/ui",
+                        "/swagger-resources", "/configuration/security","/swagger-resources/**",
+                        "/swagger-ui.html", "/webjars/**","/swagger/**", "/swagger-ui.html/**","/webjars/**");
     }
 
     @Override
@@ -40,9 +44,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/freepost/{postId}").permitAll()
                 .antMatchers("/api/threepowerpost/list").permitAll()
                 .antMatchers("/api/threepowerpost/{postId}").permitAll()
-                .antMatchers("/v2/api-docs",  "/configuration/ui",
-                        "/swagger-resources", "/configuration/security",
-                        "/swagger-ui.html", "/webjars/**","/swagger/**", "/swagger-ui.html/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.oauth2Login()
@@ -54,6 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().
                 logoutUrl("/api/user/logout").
                 deleteCookies("JSESSIONID");
+
+
     }
 
     @Bean
