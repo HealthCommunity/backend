@@ -32,8 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and()
                 .csrf().disable().authorizeRequests()
                 .antMatchers("/").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/swagger-ui.html/**").permitAll()
                 .antMatchers("/api/user/login").permitAll()
                 .antMatchers("/api/user/join").permitAll()
                 .antMatchers("/api/exercisepost/list").permitAll()
@@ -53,6 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().
                 logoutUrl("/api/user/logout").
                 deleteCookies("JSESSIONID");
+        http.authorizeRequests().antMatchers("/v2/api-docs",  "/configuration/ui",
+                "/swagger-resources", "/configuration/security",
+                "/swagger-ui.html", "/webjars/**","/swagger/**", "/swagger-ui.html/**").permitAll();
     }
 
     @Bean
