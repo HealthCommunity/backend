@@ -85,7 +85,8 @@ public class UserService {
     @Transactional
     public void updateUser(PrincipalUserDetails principalUserDetails, UserUpdateDTO userUpdateDTO) {
         User findUser = principalUserDetails.getUser();
-        findUser.update(userUpdateDTO.getNickName(), userUpdateDTO.getPassword());
+        String changePassword = bCryptPasswordEncoder.encode(userUpdateDTO.getPassword());
+        findUser.update(userUpdateDTO.getNickName(), changePassword);
     }
 
     @Transactional

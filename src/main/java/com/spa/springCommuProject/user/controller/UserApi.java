@@ -28,9 +28,14 @@ public class UserApi {
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<Void> join(@RequestBody UserJoinRequest userJoinRequest) {
-        userService.join(userJoinRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CommonResponse<UserJoinResponse>> join(@RequestBody UserJoinRequest userJoinRequest) {
+        try{
+            return ResponseEntity.ok(CommonResponse.from(userService.join(userJoinRequest)));
+        }catch (Exception e){
+            //return ResponseEntity.ok(CommonResponse.from(e));
+        }
+        return null;
+
     }
 
     @PostMapping("/login")
