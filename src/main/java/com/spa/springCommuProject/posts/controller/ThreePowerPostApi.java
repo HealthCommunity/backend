@@ -21,7 +21,7 @@ public class ThreePowerPostApi {
 
     private final PostService postService;
 
-    @GetMapping("/list")
+    @GetMapping()
     @ApiOperation(value = "페이징된 삼대력게시판 목록")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> threePowerPostListPage(@RequestParam("page") Integer page,
                                                                 @RequestParam("size") Integer size) {

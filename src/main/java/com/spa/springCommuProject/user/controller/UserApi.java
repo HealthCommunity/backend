@@ -90,7 +90,7 @@ public class UserApi {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/posts")
+    @GetMapping("/post")
     @ApiOperation(value = "내 글 목록")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> myPostsList(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
                                                                          @RequestParam("page") Integer page,

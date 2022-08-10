@@ -21,7 +21,7 @@ public class FreePostApi {
 
     private final PostService postService;
 
-    @GetMapping("/list")
+    @GetMapping()
     @ApiOperation(value = "페이징된 자유게시판 목록")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> freePostListPage(@RequestParam("page") Integer page,
                                                                               @RequestParam("size") Integer size) {
