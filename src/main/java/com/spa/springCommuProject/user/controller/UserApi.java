@@ -66,7 +66,7 @@ public class UserApi {
     @PostMapping("/edit")
     @ApiOperation(value = "내 정보 수정")
     public ResponseEntity<Void> edit(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails
-            , UserUpdateDTO userUpdateDTO) {
+            , @RequestBody UserUpdateDTO userUpdateDTO) {
 
         userService.updateUser(principalUserDetails, userUpdateDTO);
 
@@ -108,7 +108,7 @@ public class UserApi {
     @PostMapping("/bigthreepower")
     @ApiOperation("3대력부여")
     public ResponseEntity<Void> bigThreePower(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
-                                              BigThreeDTO bigThreeDTO){
+                                              @RequestBody BigThreeDTO bigThreeDTO){
         userService.updateBigThree(principalUserDetails, bigThreeDTO);
         return ResponseEntity.ok().build();
     }
