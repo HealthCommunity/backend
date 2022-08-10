@@ -38,11 +38,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/user/login").permitAll()
                 .antMatchers("/api/user/join").permitAll()
-                .antMatchers("/api/exercisepost/list").permitAll()
+                .antMatchers("/api/exercisepost").permitAll()
                 .antMatchers("/api/exercisepost/{postId}").permitAll()
-                .antMatchers("/api/freepost/list").permitAll()
+                .antMatchers("/api/freepost").permitAll()
                 .antMatchers("/api/freepost/{postId}").permitAll()
-                .antMatchers("/api/threepowerpost/list").permitAll()
+                .antMatchers("/api/threepowerpost").permitAll()
                 .antMatchers("/api/threepowerpost/{postId}").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
