@@ -11,7 +11,6 @@ import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
 import com.spa.springCommuProject.user.repository.UserRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,6 +101,13 @@ public class PostService {
         List<FileDetail> files = post.getFiles();
         List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
         return new PostResponse(post, urls);
+    }
+
+    public PostUpdateResponse findUpdatePostById(Long postId) {
+        Post post = postRepository.findById(postId).get();
+        List<FileDetail> files = post.getFiles();
+        List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
+        return new PostUpdateResponse(post, urls);
     }
 
     public PostNickNameDTO findNickNameById(Long postId) {

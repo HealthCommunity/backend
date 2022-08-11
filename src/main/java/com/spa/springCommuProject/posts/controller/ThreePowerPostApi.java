@@ -31,9 +31,10 @@ public class ThreePowerPostApi {
 
     @PostMapping()
     @ApiOperation(value = "삼대력게시글 생성")
-    public ResponseEntity<CommonResponse<ThreePostResponse>> createThreePowerPost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+    public ResponseEntity<CommonResponse<Void>> createThreePowerPost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
                                                                                   ThreePostRequest threePostRequest){
-        return ResponseEntity.ok(CommonResponse.from(postService.threeSave(threePostRequest, PostCategory.THREEPOWERPOST, principalUserDetails)));
+        postService.threeSave(threePostRequest, PostCategory.THREEPOWERPOST, principalUserDetails);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{postId}")
@@ -45,21 +46,22 @@ public class ThreePowerPostApi {
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "삼대력게시글 수정 폼")
-    public ResponseEntity<CommonResponse<PostResponse>> editThreePowerPostForm(
+    public ResponseEntity<CommonResponse<PostUpdateResponse>> editThreePowerPostForm(
         @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
         @PathVariable Long postId) {
         postService.validateUser(postId, principalUserDetails.getUser().getId());
-        return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
+        return ResponseEntity.ok(CommonResponse.from(postService.findUpdatePostById(postId)));
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "삼대력게시글 수정")
-    public ResponseEntity<CommonResponse<ThreePostResponse>> editThreePowerPost(
+    public ResponseEntity<CommonResponse<Void>> editThreePowerPost(
         @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
         @PathVariable Long postId,
         @Valid ThreePostRequest threePostRequest) {
         postService.validateUser(postId, principalUserDetails.getUser().getId());
-        return ResponseEntity.ok(CommonResponse.from(postService.threeUpdatePost(postId, threePostRequest)));
+        postService.threeUpdatePost(postId, threePostRequest);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{postId}/delete")

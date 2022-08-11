@@ -3,10 +3,7 @@ package com.spa.springCommuProject.posts.controller;
 import com.spa.springCommuProject.common.CommonResponse;
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.posts.domain.PostCategory;
-import com.spa.springCommuProject.posts.dto.PostNickNameDTO;
-import com.spa.springCommuProject.posts.dto.PostRequest;
-import com.spa.springCommuProject.posts.dto.PostResponse;
-import com.spa.springCommuProject.posts.dto.PostViewDTO;
+import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.service.PostService;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -34,9 +31,10 @@ public class ExercisePostApi {
 
     @PostMapping()
     @ApiOperation(value = "운동게시글 생성")
-    public ResponseEntity<CommonResponse<PostResponse>> createExercisePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+    public ResponseEntity<CommonResponse<Void>> createExercisePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
                                                                            PostRequest postRequest){
-        return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.EXERCISEPOST, principalUserDetails)));
+        postService.save(postRequest, PostCategory.EXERCISEPOST, principalUserDetails);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{postId}")
@@ -48,20 +46,21 @@ public class ExercisePostApi {
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "운동게시글 수정 폼")
-    public ResponseEntity<CommonResponse<PostResponse>> editExercisePostForm(
+    public ResponseEntity<CommonResponse<PostUpdateResponse>> editExercisePostForm(
         @AuthenticationPrincipal PrincipalUserDetails principalUserDetails, @PathVariable Long postId) {
         postService.validateUser(postId, principalUserDetails.getUser().getId());
-        return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
+        return ResponseEntity.ok(CommonResponse.from(postService.findUpdatePostById(postId)));
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "게시글 수정")
-    public ResponseEntity<CommonResponse<PostResponse>> editExercisePost(
+    public ResponseEntity<CommonResponse<Void>> editExercisePost(
         @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
         @PathVariable Long postId,
         @Valid PostRequest postRequest) {
         postService.validateUser(postId, principalUserDetails.getUser().getId());
-        return ResponseEntity.ok(CommonResponse.from(postService.updatePost(postId, postRequest)));
+        postService.updatePost(postId, postRequest);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{postId}/delete")

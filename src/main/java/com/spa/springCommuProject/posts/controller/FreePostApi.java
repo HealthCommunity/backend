@@ -31,9 +31,10 @@ public class FreePostApi {
 
     @PostMapping()
     @ApiOperation(value = "자유게시글 생성")
-    public ResponseEntity<CommonResponse<PostResponse>> createFreePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+    public ResponseEntity<CommonResponse<Void>> createFreePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
                                                                        PostRequest postRequest) {
-        return ResponseEntity.ok(CommonResponse.from(postService.save(postRequest, PostCategory.FREEPOST, principalUserDetails)));
+        postService.save(postRequest, PostCategory.FREEPOST, principalUserDetails);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{postId}")
@@ -45,21 +46,22 @@ public class FreePostApi {
 
     @GetMapping("/{postId}/edit")
     @ApiOperation(value = "자유게시글 수정 폼")
-    public ResponseEntity<CommonResponse<PostResponse>> editFreePostForm(
+    public ResponseEntity<CommonResponse<PostUpdateResponse>> editFreePostForm(
         @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
         @PathVariable Long postId) {
         postService.validateUser(postId, principalUserDetails.getUser().getId());
-        return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
+        return ResponseEntity.ok(CommonResponse.from(postService.findUpdatePostById(postId)));
     }
 
     @PostMapping("/{postId}/edit")
     @ApiOperation(value = "자유게시글 수정")
-    public ResponseEntity<CommonResponse<PostResponse>> editFreePost(
+    public ResponseEntity<CommonResponse<Void>> editFreePost(
         @AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
         @PathVariable Long postId,
         @Valid PostRequest postRequest) {
         postService.validateUser(postId, principalUserDetails.getUser().getId());
-        return ResponseEntity.ok(CommonResponse.from(postService.updatePost(postId, postRequest)));
+        postService.updatePost(postId, postRequest);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{postId}/delete")

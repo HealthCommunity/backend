@@ -1,19 +1,16 @@
 package com.spa.springCommuProject.posts.dto;
 
 import com.spa.springCommuProject.posts.domain.Post;
-import com.spa.springCommuProject.user.dto.UserPostResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class PostResponse {
-
+public class PostUpdateResponse {
     private Long id;
 
     @NotBlank
@@ -22,21 +19,13 @@ public class PostResponse {
     @NotBlank
     private String content;
 
-    private UserPostResponse userPostResponse;
-
     private List<String> urls = new ArrayList<>();
 
-    private int view;
 
-    private LocalDateTime createdDate;
-
-    public PostResponse(Post post, List<String> urls) {
+    public PostUpdateResponse(Post post, List<String> urls) {
         this.id = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.createdDate = post.getCreatedDate();
-        this.userPostResponse = post.getUser().convertToUserPostResponse();
-        this.view = post.getView();
         this.urls =urls;
     }
 }
