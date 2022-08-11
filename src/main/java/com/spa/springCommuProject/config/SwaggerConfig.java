@@ -2,6 +2,7 @@ package com.spa.springCommuProject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -18,6 +19,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("HealthCommunity")
                 .apiInfo(apiInfo())
+                .ignoredParameterTypes(AuthenticationPrincipal.class)
                 .select()
                 .paths(PathSelectors.ant("/**"))
                 .build();
