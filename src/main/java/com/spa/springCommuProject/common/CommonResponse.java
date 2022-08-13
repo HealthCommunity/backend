@@ -2,7 +2,6 @@ package com.spa.springCommuProject.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.spa.springCommuProject.common.exception.HealthException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +17,14 @@ public class CommonResponse<T> {
     private T data;
 
     public static <T> CommonResponse<T> from(T data) {
-        return new CommonResponse<>(CodeAndDetails.SUCCESS.getCode(), CodeAndDetails.SUCCESS.getMessage(), data);
+        return new CommonResponse<>("200", "성공", data);
     }
 
     public static CommonResponse<?> from(Exception e) {
         CodeAndDetails exceptionData = CodeAndDetails.findByClass(e.getClass());
+        if(exceptionData.getType().equals(IllegalStateException.class)){
+            return new CommonResponse<>(exceptionData.getCode(), e.getMessage(), exceptionData.getType());
+        }
         return new CommonResponse<>(exceptionData.getCode(), exceptionData.getMessage(), exceptionData.getType());
     }
 

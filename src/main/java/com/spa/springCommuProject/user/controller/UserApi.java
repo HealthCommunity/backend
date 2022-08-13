@@ -29,18 +29,14 @@ public class UserApi {
     @PostMapping("/join")
     @ApiOperation(value = "회원가입")
     public ResponseEntity<CommonResponse<UserJoinResponse>> join(@RequestBody UserJoinRequest userJoinRequest) {
-        try{
-            return ResponseEntity.ok(CommonResponse.from(userService.join(userJoinRequest)));
-        }catch (Exception e){
-            //return ResponseEntity.ok(CommonResponse.from(e));
-        }
-        return null;
+
+        return ResponseEntity.ok(CommonResponse.from(userService.join(userJoinRequest)));
 
     }
 
     @PostMapping("/login")
     @ApiOperation(value = "로그인")
-    public ResponseEntity<Void> login(UserLoginDTO userLoginDTO){
+    public ResponseEntity<Void> login(UserLoginDTO userLoginDTO) {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -101,14 +97,14 @@ public class UserApi {
 
     @GetMapping("/asd")
     public ResponseEntity<CommonResponse<PostViewDTO>> temp() {
-        PostViewDTO postViewDTO = new PostViewDTO(6000L,"asd", LocalDateTime.now(), "asdz", 1);
+        PostViewDTO postViewDTO = new PostViewDTO(6000L, "asd", LocalDateTime.now(), "asdz", 1);
         return ResponseEntity.ok(CommonResponse.from(postViewDTO));
     }
 
     @PostMapping("{userId}/bigthreepower")
     @ApiOperation("3대력부여")
     public ResponseEntity<Void> bigThreePower(@PathVariable Long userId,
-                                              @RequestBody BigThreeDTO bigThreeDTO){
+                                              @RequestBody BigThreeDTO bigThreeDTO) {
         userService.updateBigThree(userId, bigThreeDTO);
         return ResponseEntity.ok().build();
     }
