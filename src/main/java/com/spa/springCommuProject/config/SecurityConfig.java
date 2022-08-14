@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.config;
 
+import com.spa.springCommuProject.config.login.CustomAuthFailureHandler;
 import com.spa.springCommuProject.config.login.JsonUsernamePasswordAuthenticationFilter;
 import com.spa.springCommuProject.config.login.PrincipalOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -22,13 +25,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PrincipalOauth2UserService principalOauth2UserService;
 
+    @Autowired
+    private CustomAuthFailureHandler customAuthFailureHandler;
+
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
-                .and().ignoring().antMatchers("/v2/api-docs",  "/configuration/ui",
-                        "/swagger-resources", "/configuration/security","/swagger-resources/**",
-                        "/swagger-ui.html", "/webjars/**","/swagger/**", "/swagger-ui.html/**","/webjars/**");
+                .and().ignoring().antMatchers("/v2/api-docs", "/configuration/ui",
+                        "/swagger-resources", "/configuration/security", "/swagger-resources/**",
+                        "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui.html/**", "/webjars/**");
     }
 
     @Override
@@ -44,7 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/freepost/{postId}").permitAll()
                 .antMatchers("/api/threepowerpost").permitAll()
                 .antMatchers("/api/threepowerpost/{postId}").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                ;
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.oauth2Login()
                 .userInfoEndpoint()
@@ -52,18 +59,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers()
                 .frameOptions()
                 .sameOrigin();
-        http.logout().
-                logoutUrl("/api/user/logout").
-                logoutSuccessUrl("/api/user/login").
-                deleteCookies("JSESSIONID");
-
-
+        http.logout(logout -> logout
+                .permitAll()
+                .logoutUrl("/api/user/logout")
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                }));
     }
 
     @Bean
     protected JsonUsernamePasswordAuthenticationFilter getJsonUsernamePasswordAuthenticationFilter() throws Exception {
         JsonUsernamePasswordAuthenticationFilter filter = new JsonUsernamePasswordAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManager());
+        filter.setAuthenticationFailureHandler(customAuthFailureHandler);
         filter.setFilterProcessesUrl("/api/user/login");
         return filter;
     }

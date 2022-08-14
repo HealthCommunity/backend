@@ -1,21 +1,21 @@
 package com.spa.springCommuProject.config.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.servlet.ServletInputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import lombok.SneakyThrows;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private boolean postOnly = true;
 
-    @SneakyThrows
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
         throws AuthenticationException {
@@ -26,7 +26,12 @@ public class JsonUsernamePasswordAuthenticationFilter extends UsernamePasswordAu
 
         ObjectMapper mapper = new ObjectMapper();
 
-        LoginDto loginDto = mapper.readValue(request.getInputStream(), LoginDto.class); // getInputStream 에러 잡기 -> SneakyThrows
+        LoginDto loginDto = null; // getInputStream 에러 잡기 -> SneakyThrows
+        try {
+            loginDto = mapper.readValue(request.getInputStream(), LoginDto.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println("userLoginDto.getUsername() = " + loginDto.getUsername());
         System.out.println("userLoginDto.getPassword() = " + loginDto.getPassword());

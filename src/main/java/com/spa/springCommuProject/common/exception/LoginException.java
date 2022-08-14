@@ -1,6 +1,12 @@
 package com.spa.springCommuProject.common.exception;
 
-import java.util.NoSuchElementException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public class LoginException extends NoSuchElementException {
+
+public class LoginException extends UsernameNotFoundException {
+
+    public LoginException(String msg) {
+        super(msg);
+    }
+
 }
