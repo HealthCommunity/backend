@@ -30,6 +30,9 @@ public class HomeApi {
     @GetMapping("/api/search")
     @ApiOperation(value = "검색")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> search(@RequestBody SearchRequest searchRequest){
+        System.out.println(searchRequest.getKeyword());
+        System.out.println(searchRequest.getSelect());
+
 
         //작성자, 내용, 제목, 통합검색 (제목 + 내용)
 
