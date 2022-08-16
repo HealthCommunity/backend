@@ -27,7 +27,7 @@ public class HomeApi {
         return ResponseEntity.ok(CommonResponse.from(postService.mainPagePosts()));
     }
 
-    @PostMapping("/search")
+    @PostMapping("/api/search")
     @ApiOperation(value = "검색")
     public ResponseEntity<CommonResponse<List<PostViewDTO>>> search(@RequestBody SearchRequest searchRequest){
 
