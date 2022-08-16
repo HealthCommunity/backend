@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,7 +32,10 @@ public class HomeApi {
 
     @GetMapping("/search")
     @ApiOperation(value = "검색")
-    public ResponseEntity<CommonResponse<List<PostViewDTO>>> search(SearchRequest searchRequest){
+    public ResponseEntity<CommonResponse<List<PostViewDTO>>> search(@RequestBody SearchRequest searchRequest){
+
+        //작성자, 내용, 제목, 통합검색 (제목 + 내용)
+
         if(searchRequest.getSelect().equals("title")){
             return ResponseEntity.ok(CommonResponse.from(postService.searchTitle(searchRequest.getKeyword())));
         }else {
