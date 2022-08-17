@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.posts.service;
 
 
+import com.spa.springCommuProject.common.exception.NoThreePowerException;
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.file.domain.FileDetail;
 import com.spa.springCommuProject.file.domain.VideoCategory;
@@ -64,8 +65,13 @@ public class PostService {
     }
 
     @Transactional
-    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) {
-        User user = principalUserDetails.getUser();
+    public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) throws NoThreePowerException {
+        //User user = principalUserDetails.getUser();
+        User user = userRepository.getById(1L);
+        if(threePostRequest.getBench().getOriginalFilename().equals("") || threePostRequest.getDead().getOriginalFilename().equals("")
+                || threePostRequest.getSquat().getOriginalFilename().equals("")){
+            throw new NoThreePowerException("123");
+        }
         Post post = Post.builder()
                 .user(user)
                 .title(threePostRequest.getTitle())
@@ -80,7 +86,7 @@ public class PostService {
         return new ThreePostResponse(post, benchUrl, squatUrl, deadUrl);
     }
 
-    public List<PostViewDTO> searchTitle(String keyword) {
+    public List<PostViewDTO> searchByTitle(String keyword) {
         return postRepository
                 .findByTitleContainingIgnoreCase(keyword)
                 .stream()
@@ -88,9 +94,26 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public List<PostViewDTO> searchTitleAndContent(String keyword) {
+    public List<PostViewDTO> searchByTitleAndContent(String keyword) {
         return postRepository
                 .findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword)
+                .stream()
+                .map(Post::convertToViewDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostViewDTO> searchByContent(String keyword) {
+        return postRepository
+                .findByContentContainingIgnoreCase(keyword)
+                .stream()
+                .map(Post::convertToViewDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostViewDTO> searchByUser(String keyword) {
+        User findUser = userRepository.findByNickName(keyword);
+        return postRepository
+                .findByUser(findUser)
                 .stream()
                 .map(Post::convertToViewDTO)
                 .collect(Collectors.toList());

@@ -12,8 +12,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -40,8 +38,8 @@ public class UserService {
     }
 
     private void validateDuplicateUser(UserJoinRequest userJoinRequest) {
-        List<User> findUserByNickName = userRepository.findByNickName(userJoinRequest.getNickName());
-        if (!findUserByNickName.isEmpty()) {
+        User findUser = userRepository.findByNickName(userJoinRequest.getNickName());
+        if (findUser!=null) {
             throw new IllegalStateException("이미 존재하는 닉네임입니다.");
         }
         if (!userJoinRequest.getPasswordCheck().equals(userJoinRequest.getPassword())){

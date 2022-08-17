@@ -32,7 +32,7 @@ public class ExercisePostApi {
     @PostMapping()
     @ApiOperation(value = "운동게시글 생성")
     public ResponseEntity<CommonResponse<Void>> createExercisePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
-                                                                           PostRequest postRequest){
+                                                                           @Valid PostRequest postRequest){
         postService.save(postRequest, PostCategory.EXERCISEPOST, principalUserDetails);
         return ResponseEntity.ok().build();
     }

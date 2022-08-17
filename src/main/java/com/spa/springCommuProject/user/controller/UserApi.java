@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class UserApi {
 
     @PostMapping("/join")
     @ApiOperation(value = "회원가입")
-    public ResponseEntity<CommonResponse<UserJoinResponse>> join(@RequestBody UserJoinRequest userJoinRequest) {
+    public ResponseEntity<CommonResponse<UserJoinResponse>> join(@Valid @RequestBody UserJoinRequest userJoinRequest) {
 
         return ResponseEntity.ok(CommonResponse.from(userService.join(userJoinRequest)));
 
@@ -62,7 +63,7 @@ public class UserApi {
     @PostMapping("/edit")
     @ApiOperation(value = "내 정보 수정")
     public ResponseEntity<Void> edit(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails
-            , @RequestBody UserUpdateDTO userUpdateDTO) {
+            , @Valid @RequestBody UserUpdateDTO userUpdateDTO) {
 
         userService.updateUser(principalUserDetails, userUpdateDTO);
 

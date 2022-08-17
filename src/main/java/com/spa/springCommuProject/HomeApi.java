@@ -1,6 +1,7 @@
 package com.spa.springCommuProject;
 
 import com.spa.springCommuProject.common.CommonResponse;
+import com.spa.springCommuProject.common.exception.NotFoundSelectException;
 import com.spa.springCommuProject.posts.dto.MainPageDTO;
 import com.spa.springCommuProject.posts.dto.PostViewDTO;
 import com.spa.springCommuProject.posts.dto.SearchRequest;
@@ -9,7 +10,9 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -37,9 +40,15 @@ public class HomeApi {
         //작성자, 내용, 제목, 통합검색 (제목 + 내용)
 
         if(searchRequest.getSelect().equals("title")){
-            return ResponseEntity.ok(CommonResponse.from(postService.searchTitle(searchRequest.getKeyword())));
-        }else {
-            return ResponseEntity.ok(CommonResponse.from(postService.searchTitleAndContent(searchRequest.getKeyword())));
+            return ResponseEntity.ok(CommonResponse.from(postService.searchByTitle(searchRequest.getKeyword())));
+        }else if(searchRequest.getSelect().equals("content")){
+            return ResponseEntity.ok(CommonResponse.from(postService.searchByContent(searchRequest.getKeyword())));
+        } else if(searchRequest.getSelect().equals("titleandcontent")){
+        return ResponseEntity.ok(CommonResponse.from(postService.searchByTitleAndContent(searchRequest.getKeyword())));
+        } else if(searchRequest.getSelect().equals("user")){
+            return ResponseEntity.ok(CommonResponse.from(postService.searchByUser(searchRequest.getKeyword())));
+        }else{
+            throw new NotFoundSelectException("검색 종류가 잘못되었습니다.");
         }
     }
 

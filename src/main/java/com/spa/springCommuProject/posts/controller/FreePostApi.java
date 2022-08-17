@@ -32,7 +32,7 @@ public class FreePostApi {
     @PostMapping()
     @ApiOperation(value = "자유게시글 생성")
     public ResponseEntity<CommonResponse<Void>> createFreePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
-                                                                       PostRequest postRequest) {
+                                                               @Valid PostRequest postRequest) {
         postService.save(postRequest, PostCategory.FREEPOST, principalUserDetails);
         return ResponseEntity.ok().build();
     }

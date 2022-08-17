@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.posts.controller;
 
 import com.spa.springCommuProject.common.CommonResponse;
+import com.spa.springCommuProject.common.exception.NoThreePowerException;
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.*;
@@ -32,7 +33,7 @@ public class ThreePowerPostApi {
     @PostMapping()
     @ApiOperation(value = "삼대력게시글 생성")
     public ResponseEntity<CommonResponse<Void>> createThreePowerPost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
-                                                                                  ThreePostRequest threePostRequest){
+                                                                                  @Valid ThreePostRequest threePostRequest) throws NoThreePowerException {
         postService.threeSave(threePostRequest, PostCategory.THREEPOWERPOST, principalUserDetails);
         return ResponseEntity.ok().build();
     }
