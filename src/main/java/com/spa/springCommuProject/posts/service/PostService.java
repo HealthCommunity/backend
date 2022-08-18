@@ -68,8 +68,8 @@ public class PostService {
 
     @Transactional
     public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) throws NoThreePowerException {
-        //User user = principalUserDetails.getUser();
-        User user = userRepository.getById(1L);
+        User user = principalUserDetails.getUser();
+        //User user = userRepository.getById(1L);
         if(threePostRequest.getBench().getOriginalFilename().equals("") || threePostRequest.getDead().getOriginalFilename().equals("")
                 || threePostRequest.getSquat().getOriginalFilename().equals("")){
             throw new NoThreePowerException("123");
