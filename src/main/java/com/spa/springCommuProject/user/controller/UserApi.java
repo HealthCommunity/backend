@@ -16,7 +16,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -96,13 +95,8 @@ public class UserApi {
         return ResponseEntity.ok(CommonResponse.from(postService.findAllPostsByUserId(principalUserDetails, pageRequest)));
     }
 
-    @GetMapping("/asd")
-    public ResponseEntity<CommonResponse<PostViewDTO>> temp() {
-        PostViewDTO postViewDTO = new PostViewDTO(6000L, "asd", LocalDateTime.now(), "asdz", 1);
-        return ResponseEntity.ok(CommonResponse.from(postViewDTO));
-    }
 
-    @PostMapping("{userId}/bigthreepower")
+    @PostMapping("/{userId}/bigthreepower")
     @ApiOperation("3대력부여")
     public ResponseEntity<Void> bigThreePower(@PathVariable Long userId,
                                               @RequestBody BigThreeDTO bigThreeDTO) {

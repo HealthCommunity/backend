@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.posts.dto;
 
 import com.spa.springCommuProject.posts.domain.Post;
+import com.spa.springCommuProject.user.dto.SessionUserResponse;
 import com.spa.springCommuProject.user.dto.UserPostResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PostResponse {
 
-    private Long id;
+    private Long postId;
 
     @NotBlank
     private String title;
@@ -22,7 +23,9 @@ public class PostResponse {
     @NotBlank
     private String content;
 
-    private UserPostResponse userPostResponse;
+    private UserPostResponse UserPostResponse;
+
+    private SessionUserResponse sessionUserResponse;
 
     private List<String> urls = new ArrayList<>();
 
@@ -31,11 +34,22 @@ public class PostResponse {
     private LocalDateTime createdDate;
 
     public PostResponse(Post post, List<String> urls) {
-        this.id = post.getId();
+        this.postId = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.createdDate = post.getCreatedDate();
-        this.userPostResponse = post.getUser().convertToUserPostResponse();
+        this.UserPostResponse = post.getUser().convertToUserPostResponse();
+        this.view = post.getView();
+        this.urls =urls;
+    }
+
+    public PostResponse(Post post, List<String> urls, SessionUserResponse sessionUserResponse) {
+        this.postId = post.getId();
+        this.title = post.getTitle();
+        this.content = post.getContent();
+        this.createdDate = post.getCreatedDate();
+        this.UserPostResponse = post.getUser().convertToUserPostResponse();
+        this.sessionUserResponse = sessionUserResponse;
         this.view = post.getView();
         this.urls =urls;
     }

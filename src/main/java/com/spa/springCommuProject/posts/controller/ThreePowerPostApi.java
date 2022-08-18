@@ -40,9 +40,10 @@ public class ThreePowerPostApi {
 
     @GetMapping("/{postId}")
     @ApiOperation(value = "삼대력게시글 보기 페이지")
-    public ResponseEntity<CommonResponse<PostResponse>> threePowerPostView(@PathVariable Long postId) {
+    public ResponseEntity<CommonResponse<PostResponse>> threePowerPostView(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
+                                                                           @PathVariable Long postId) {
         postService.viewIncrease(postId);  //조회 수 증가 But 새로고침할때마다 계속오름 logic필요
-        return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId)));
+        return ResponseEntity.ok(CommonResponse.from(postService.findPostById(postId, principalUserDetails)));
     }
 
     @GetMapping("/{postId}/edit")

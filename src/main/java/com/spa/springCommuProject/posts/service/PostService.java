@@ -10,7 +10,9 @@ import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.domain.PostCategory;
 import com.spa.springCommuProject.posts.dto.*;
 import com.spa.springCommuProject.posts.repository.PostRepository;
+import com.spa.springCommuProject.user.domain.Role;
 import com.spa.springCommuProject.user.domain.User;
+import com.spa.springCommuProject.user.dto.SessionUserResponse;
 import com.spa.springCommuProject.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -119,11 +121,22 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public PostResponse findPostById(Long postId) {
+    public PostResponse findPostById(Long postId, PrincipalUserDetails principalUserDetails) {
         Post post = postRepository.findById(postId).get();
         List<FileDetail> files = post.getFiles();
         List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
-        return new PostResponse(post, urls);
+        SessionUserResponse sessionUserResponse = authUser(principalUserDetails);
+        return new PostResponse(post, urls, sessionUserResponse);
+    }
+
+    private SessionUserResponse authUser(PrincipalUserDetails principalUserDetails) {
+        SessionUserResponse sessionUserResponse;
+        if(principalUserDetails==null){
+            sessionUserResponse = new SessionUserResponse(0L, Role.USER);
+        }else{
+            sessionUserResponse = new SessionUserResponse(principalUserDetails.getUser().getId(), principalUserDetails.getUser().getRole());
+        }
+        return sessionUserResponse;
     }
 
     public PostUpdateResponse findUpdatePostById(Long postId) {
