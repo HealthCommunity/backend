@@ -28,7 +28,7 @@ public class UserService {
             .password(bCryptPasswordEncoder.encode(userJoinRequest.getPassword()))
             .provider(Provider.SELF)
             .bigThreePower(new BigThreePower(0, 0, 0))
-            .role(Role.USER)
+            .role(Role.ROLE_USER)
             .available(true)
             .build();
 
