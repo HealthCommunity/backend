@@ -59,7 +59,7 @@ public class PostService {
                 .postCategory(postCategory)
                 .build();
         postRepository.save(post);
-        if (!postRequest.getFiles().isEmpty()) {
+        if (postRequest.getFiles()!=null) {
             urls = fileService.saveFiles(postRequest.getFiles(), post);
         }
 
