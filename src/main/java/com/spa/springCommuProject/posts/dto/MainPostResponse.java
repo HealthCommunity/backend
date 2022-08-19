@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class MainPostResponse {
-    private Long id;
+    private Long postId;
     private String title;
     private String nickName;
     private int view;
