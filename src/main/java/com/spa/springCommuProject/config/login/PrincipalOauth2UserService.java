@@ -58,7 +58,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                 .email(email)
                 .provider(provider)
                 .providerId(providerId)
-                .role(Role.USER)
+                .role(Role.ROLE_USER)
                 .bigThreePower(new BigThreePower(0, 0, 0))
                 .available(true)
                 .build();

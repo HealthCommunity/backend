@@ -1,5 +1,5 @@
 package com.spa.springCommuProject.user.domain;
 
 public enum Role {
-    MASTER, USER
+    ROLE_MASTER, ROLE_USER
 }

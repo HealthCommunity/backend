@@ -31,7 +31,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private Role role = Role.USER;
+    private Role role = Role.ROLE_USER;
     private String email;
     private Provider provider;
     private String providerId;
@@ -51,7 +51,7 @@ public class User {
         this.nickName = nickName;
         this.loginId = loginId;
         this.password = password;
-        this.role = Role.USER; //default값
+        this.role = Role.ROLE_USER; //default값
         this.bigThreePower = new BigThreePower(0,0,0); //default값
     }
 

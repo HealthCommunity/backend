@@ -34,13 +34,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations())
                 .and().ignoring().antMatchers("/v2/api-docs", "/configuration/ui",
                         "/swagger-resources", "/configuration/security", "/swagger-resources/**",
-                        "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui.html/**", "/webjars/**");
+                        "/swagger-ui.html", "/webjars/**", "/swagger/**", "/swagger-ui.html/**", "/webjars/**", "/h2-console/**");
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .csrf().disable().authorizeRequests()
+                .antMatchers("/api/user/{userId}/bigthreepower").hasRole("MASTER")
                 .antMatchers("/").permitAll()
                 .antMatchers("/api").permitAll()
                 .antMatchers("/api/search").permitAll()
