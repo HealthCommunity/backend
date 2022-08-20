@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class ThreePostResponse {
     @NotBlank
     private String content;
 
-    private LocalDateTime createdDate;
+    private String  createdDate;
 
     private String nickName;
 
@@ -34,7 +34,8 @@ public class ThreePostResponse {
         this.postId = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.createdDate = post.getCreatedDate();
+        DateTimeFormatter myPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.createdDate = post.getCreatedDate().format(myPattern);
         this.nickName = post.getUser().getNickName();
         this.view = post.getView();
         this.benchUrl = benchUrl;

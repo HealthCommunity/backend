@@ -32,8 +32,7 @@ public class PostDTO {
     public PostDTO() {
     }
 
-    public PostDTO(String title, String content, LocalDateTime createdDate, List<MultipartFile> files, String nickname,
-        int view) {
+    public PostDTO(String title, String content, LocalDateTime createdDate, List<MultipartFile> files, String nickname, int view) {
         this.title = title;
         this.content = content;
         this.createdDate = createdDate;

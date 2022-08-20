@@ -29,9 +29,9 @@ public class PostViewDTO {
 
     public PostViewDTO(Long postId, String title, LocalDateTime createdDate, String nickname, int view) {
         DateTimeFormatter myPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.createdDate = createdDate.format(myPattern);
         this.postId = postId;
         this.title = title;
-        this.createdDate = createdDate.format(myPattern);
         this.nickname = nickname;
         this.view = view;
     }

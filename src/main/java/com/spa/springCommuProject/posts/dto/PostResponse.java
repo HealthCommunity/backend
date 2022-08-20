@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,13 +31,14 @@ public class PostResponse {
 
     private int view;
 
-    private LocalDateTime createdDate;
+    private String  createdDate;
 
     public PostResponse(Post post, List<String> urls) {
         this.postId = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.createdDate = post.getCreatedDate();
+        DateTimeFormatter myPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.createdDate = post.getCreatedDate().format(myPattern);
         this.UserPostResponse = post.getUser().convertToUserPostResponse();
         this.view = post.getView();
         this.urls =urls;
@@ -47,7 +48,8 @@ public class PostResponse {
         this.postId = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
-        this.createdDate = post.getCreatedDate();
+        DateTimeFormatter myPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        this.createdDate = post.getCreatedDate().format(myPattern);
         this.UserPostResponse = post.getUser().convertToUserPostResponse();
         this.sessionUserResponse = sessionUserResponse;
         this.view = post.getView();
