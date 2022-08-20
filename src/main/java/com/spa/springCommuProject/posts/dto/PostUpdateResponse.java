@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class PostUpdateResponse {
-    private Long id;
+    private Long postId;
 
     @NotBlank
     private String title;
@@ -23,7 +23,7 @@ public class PostUpdateResponse {
 
 
     public PostUpdateResponse(Post post, List<String> urls) {
-        this.id = post.getId();
+        this.postId = post.getId();
         this.title = post.getTitle();
         this.content = post.getContent();
         this.urls =urls;

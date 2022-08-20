@@ -38,13 +38,31 @@ public class PostService {
     public List<PostViewDTO> findPagingPosts(PostCategory postCategory, Integer page, Integer size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
         List<Post> pagingPosts = postRepository.findByPostCategory(postCategory, pageRequest);
-        return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
+        List<PostViewDTO> posts = pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
+        setPostsUrls(posts);
+        return posts;
+    }
+
+    private void setPostsUrls(List<PostViewDTO> posts) {
+        for (PostViewDTO post : posts) {
+            List<FileDetail> files = postRepository.findById(post.getPostId()).get().getFiles();
+            if (files.size() == 0) {
+                ArrayList<String> urls = new ArrayList<>();
+                urls.add("https://healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/IMAGE/d6afdfee-401b-418d-a925-9f1b84387a31.png");
+                post.setUrls(urls);
+            } else {
+                List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
+                post.setUrls(urls);
+            }
+        }
     }
 
     public List<PostViewDTO> findAllPostsByUserId(PrincipalUserDetails principalUserDetails, Pageable pageable) {
         User findUser = principalUserDetails.getUser();
         List<Post> pagingPosts = postRepository.findByUserOrderByCreatedDateDesc(findUser, pageable);
-        return pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
+        List<PostViewDTO> posts = pagingPosts.stream().map(Post::convertToViewDTO).collect(Collectors.toList());
+        setPostsUrls(posts);
+        return posts;
     }
 
 
@@ -59,7 +77,7 @@ public class PostService {
                 .postCategory(postCategory)
                 .build();
         postRepository.save(post);
-        if (!postRequest.getFiles().isEmpty()) {
+        if (postRequest.getFiles() != null) {
             urls = fileService.saveFiles(postRequest.getFiles(), post);
         }
 
@@ -68,10 +86,10 @@ public class PostService {
 
     @Transactional
     public ThreePostResponse threeSave(ThreePostRequest threePostRequest, PostCategory postCategory, PrincipalUserDetails principalUserDetails) throws NoThreePowerException {
-        //User user = principalUserDetails.getUser();
-        User user = userRepository.getById(1L);
-        if(threePostRequest.getBench().getOriginalFilename().equals("") || threePostRequest.getDead().getOriginalFilename().equals("")
-                || threePostRequest.getSquat().getOriginalFilename().equals("")){
+        User user = principalUserDetails.getUser();
+        //User user = userRepository.getById(1L);
+        if (threePostRequest.getBench().getOriginalFilename().equals("") || threePostRequest.getDead().getOriginalFilename().equals("")
+                || threePostRequest.getSquat().getOriginalFilename().equals("")) {
             throw new NoThreePowerException("123");
         }
         Post post = Post.builder()
@@ -89,36 +107,48 @@ public class PostService {
     }
 
     public List<PostViewDTO> searchByTitle(String keyword) {
-        return postRepository
+        List<PostViewDTO> posts = postRepository
                 .findByTitleContainingIgnoreCase(keyword)
                 .stream()
                 .map(Post::convertToViewDTO)
                 .collect(Collectors.toList());
+        setPostsUrls(posts);
+
+        return posts;
     }
 
     public List<PostViewDTO> searchByTitleAndContent(String keyword) {
-        return postRepository
+        List<PostViewDTO> posts = postRepository
                 .findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword)
                 .stream()
                 .map(Post::convertToViewDTO)
                 .collect(Collectors.toList());
+        setPostsUrls(posts);
+
+        return posts;
     }
 
     public List<PostViewDTO> searchByContent(String keyword) {
-        return postRepository
+        List<PostViewDTO> posts = postRepository
                 .findByContentContainingIgnoreCase(keyword)
                 .stream()
                 .map(Post::convertToViewDTO)
                 .collect(Collectors.toList());
+        setPostsUrls(posts);
+
+        return posts;
     }
 
     public List<PostViewDTO> searchByUser(String keyword) {
         User findUser = userRepository.findByNickName(keyword);
-        return postRepository
+        List<PostViewDTO> posts = postRepository
                 .findByUser(findUser)
                 .stream()
                 .map(Post::convertToViewDTO)
                 .collect(Collectors.toList());
+        setPostsUrls(posts);
+
+        return posts;
     }
 
     public PostResponse findPostById(Long postId, PrincipalUserDetails principalUserDetails) {
@@ -131,9 +161,9 @@ public class PostService {
 
     private SessionUserResponse authUser(PrincipalUserDetails principalUserDetails) {
         SessionUserResponse sessionUserResponse;
-        if(principalUserDetails==null){
-            sessionUserResponse = new SessionUserResponse(0L, Role.ROLE_USER);
-        }else{
+        if (principalUserDetails == null) {
+            sessionUserResponse = new SessionUserResponse(0L, Role.USER);
+        } else {
             sessionUserResponse = new SessionUserResponse(principalUserDetails.getUser().getId(), principalUserDetails.getUser().getRole());
         }
         return sessionUserResponse;
