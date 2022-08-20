@@ -162,7 +162,7 @@ public class PostService {
     private SessionUserResponse authUser(PrincipalUserDetails principalUserDetails) {
         SessionUserResponse sessionUserResponse;
         if (principalUserDetails == null) {
-            sessionUserResponse = new SessionUserResponse(0L, Role.USER);
+            sessionUserResponse = new SessionUserResponse(0L, Role.ROLE_USER);
         } else {
             sessionUserResponse = new SessionUserResponse(principalUserDetails.getUser().getId(), principalUserDetails.getUser().getRole());
         }
