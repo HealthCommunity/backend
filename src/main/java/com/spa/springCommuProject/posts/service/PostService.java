@@ -209,7 +209,10 @@ public class PostService {
     public PostResponse updatePost(Long postId, PostRequest postRequest) {
         Post post = postRepository.findById(postId).get();
         Post updatePost = post.update(postRequest.getTitle(), postRequest.getContent());
-        List<String> urls = fileService.updateFiles(postRequest.getFiles(), updatePost);
+        List<String> urls = new ArrayList<>();
+        if (postRequest.getFiles() != null) {
+            urls = fileService.updateFiles(postRequest.getFiles(), updatePost);
+        }
         return new PostResponse(updatePost, urls);
     }
 
