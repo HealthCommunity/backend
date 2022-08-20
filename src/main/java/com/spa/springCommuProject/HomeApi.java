@@ -24,7 +24,7 @@ public class HomeApi {
 
     private final PostService postService;
 
-    @GetMapping("/")
+    @GetMapping("/api")
     @ApiOperation(value = "메인페이지")
     public ResponseEntity<CommonResponse<MainPageDTO>> main(){
         return ResponseEntity.ok(CommonResponse.from(postService.mainPagePosts()));
