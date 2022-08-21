@@ -86,6 +86,6 @@ public class FileDetail {
     }
 
     public String getUrl(){
-        return "healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/" + this.getPath();
+        return "https://healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/" + this.getPath();
     }
 }

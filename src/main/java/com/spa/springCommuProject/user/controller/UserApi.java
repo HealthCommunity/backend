@@ -99,7 +99,7 @@ public class UserApi {
     @PostMapping("/{userId}/bigthreepower")
     @ApiOperation("3대력부여")
     public ResponseEntity<Void> bigThreePower(@PathVariable Long userId,
-                                              @RequestBody BigThreeDTO bigThreeDTO) {
+                                              @Valid @RequestBody BigThreeDTO bigThreeDTO) {
         userService.updateBigThree(userId, bigThreeDTO);
         return ResponseEntity.ok().build();
     }
