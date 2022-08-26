@@ -8,9 +8,9 @@ import javax.validation.constraints.NotBlank;
 public class BigThreeDTO {
 
     @NotBlank
-    private int squat;
+    private String squat;
     @NotBlank
-    private int bench;
+    private String bench;
     @NotBlank
-    private int dead;
+    private String dead;
 }

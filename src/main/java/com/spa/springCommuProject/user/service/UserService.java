@@ -98,7 +98,7 @@ public class UserService {
     @Transactional
     public void updateBigThree(Long userId, BigThreeDTO bigThreeDTO) {
         User findUser = userRepository.getById(userId);
-        BigThreePower bigThreePower = new BigThreePower(bigThreeDTO.getSquat(), bigThreeDTO.getBench(), bigThreeDTO.getDead());
+        BigThreePower bigThreePower = new BigThreePower(Integer.parseInt(bigThreeDTO.getSquat()), Integer.parseInt(bigThreeDTO.getBench()), Integer.parseInt(bigThreeDTO.getDead()));
         findUser.updateBig(bigThreePower);
     }
 }
