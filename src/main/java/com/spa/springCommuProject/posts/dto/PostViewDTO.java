@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.posts.dto;
 
+import com.spa.springCommuProject.posts.domain.PostCategory;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -25,12 +26,15 @@ public class PostViewDTO {
 
     private String nickname;
 
+    private PostCategory postCategory;
+
     private int view;
 
-    public PostViewDTO(Long postId, String title, LocalDateTime createdDate, String nickname, int view) {
+    public PostViewDTO(Long postId, String title, LocalDateTime createdDate, String nickname, int view, PostCategory postCategory) {
         DateTimeFormatter myPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.createdDate = createdDate.format(myPattern);
         this.postId = postId;
+        this.postCategory = postCategory;
         this.title = title;
         this.nickname = nickname;
         this.view = view;
