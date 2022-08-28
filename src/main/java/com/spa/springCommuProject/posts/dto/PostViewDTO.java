@@ -26,7 +26,7 @@ public class PostViewDTO {
 
     private String nickname;
 
-    private PostCategory postCategory;
+    private String postCategory;
 
     private int view;
 
@@ -34,7 +34,7 @@ public class PostViewDTO {
         DateTimeFormatter myPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         this.createdDate = createdDate.format(myPattern);
         this.postId = postId;
-        this.postCategory = postCategory;
+        this.postCategory = postCategory.toString().toLowerCase();
         this.title = title;
         this.nickname = nickname;
         this.view = view;
