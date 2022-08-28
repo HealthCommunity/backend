@@ -1,7 +1,9 @@
 package com.spa.springCommuProject.comment.controller;
 
 import com.spa.springCommuProject.comment.dto.CommentRequestDto;
+import com.spa.springCommuProject.comment.dto.CommentResponseDto;
 import com.spa.springCommuProject.comment.service.CommentService;
+import com.spa.springCommuProject.common.CommonResponse;
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +20,8 @@ public class CommentApi {
     private final CommentService commentService;     /* CREATE */
 
     @PostMapping("/api/post/{id}/comments")
-    public ResponseEntity<Void> commentSave(@PathVariable Long id, @RequestBody CommentRequestDto dto, @AuthenticationPrincipal PrincipalUserDetails principalUserDetails) {
-        commentService.commentSave(principalUserDetails.getUser(), id, dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CommonResponse<CommentResponseDto>> commentSave(@PathVariable Long id, @RequestBody CommentRequestDto dto, @AuthenticationPrincipal PrincipalUserDetails principalUserDetails) {
+        return ResponseEntity.ok(CommonResponse.from(commentService.commentSave(principalUserDetails.getUser(), id, dto)));
     }
 
 }
