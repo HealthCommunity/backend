@@ -19,6 +19,13 @@ public class PrincipalDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username){
         Optional<User> optionalUser = userRepository.findByLoginId(username);
-        return optionalUser.map(PrincipalUserDetails::new).orElseThrow(()->new LoginException("로그인 에러"));
+        if (optionalUser.isPresent()) {
+            User loginUser = optionalUser.get();
+            if (!loginUser.getAvailable()) {
+                throw new LoginException("회원탈퇴된 계정입니다.");
+            }
+            return new PrincipalUserDetails(loginUser);
+        }
+        throw new LoginException("해당 회원이 존재하지 않습니다.");
     }
 }

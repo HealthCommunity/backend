@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.config.login;
 
+import com.spa.springCommuProject.common.exception.LoginException;
 import com.spa.springCommuProject.config.login.provider.FacebookUserInfo;
 import com.spa.springCommuProject.config.login.provider.GoogleUserInfo;
 import com.spa.springCommuProject.config.login.provider.NaverUserInfo;
@@ -50,6 +51,9 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         User user;
         if (optionalUser.isPresent()) {
             user = optionalUser.get();
+            if (!user.getAvailable()) {
+                throw new LoginException("회원 탈퇴된 계정입니다");
+            }
         } else {
             // 없으면 새로 생성
             user = User.builder()
