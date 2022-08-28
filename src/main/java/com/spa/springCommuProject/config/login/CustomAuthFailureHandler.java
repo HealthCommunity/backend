@@ -17,7 +17,7 @@ import java.io.IOException;
 @Component
 public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
@@ -27,6 +27,6 @@ public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHand
         response.setCharacterEncoding("UTF-8");
 
         //super.onAuthenticationFailure(request, response, exception);
-        objectMapper.writeValue(response.getWriter(), CommonResponse.from(new LoginException("123")));
+        objectMapper.writeValue(response.getWriter(), CommonResponse.from(exception));
     }
 }

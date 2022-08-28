@@ -1,6 +1,7 @@
 package com.spa.springCommuProject.config;
 
 import com.spa.springCommuProject.config.login.CustomAuthFailureHandler;
+import com.spa.springCommuProject.config.login.CustomAuthSuccessHandler;
 import com.spa.springCommuProject.config.login.JsonUsernamePasswordAuthenticationFilter;
 import com.spa.springCommuProject.config.login.PrincipalOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomAuthFailureHandler customAuthFailureHandler;
+
+    @Autowired
+    private CustomAuthSuccessHandler customAuthSuccessHandler;
 
     @Override
     public void configure(WebSecurity web) {
@@ -59,7 +63,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.oauth2Login()
                 .userInfoEndpoint()
-                .userService(principalOauth2UserService);
+                .userService(principalOauth2UserService)
+                .and()
+                .successHandler(customAuthSuccessHandler)
+                .failureHandler(customAuthFailureHandler);
         http.headers()
                 .frameOptions()
                 .sameOrigin();
@@ -77,6 +84,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JsonUsernamePasswordAuthenticationFilter filter = new JsonUsernamePasswordAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationFailureHandler(customAuthFailureHandler);
+        filter.setAuthenticationSuccessHandler(customAuthSuccessHandler);
         filter.setFilterProcessesUrl("/api/user/login");
         return filter;
     }
