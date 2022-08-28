@@ -2,6 +2,7 @@ package com.spa.springCommuProject.config;
 
 import com.spa.springCommuProject.config.login.CustomAuthFailureHandler;
 import com.spa.springCommuProject.config.login.CustomAuthSuccessHandler;
+import com.spa.springCommuProject.config.login.CustomAuthSuccessHandler2;
 import com.spa.springCommuProject.config.login.JsonUsernamePasswordAuthenticationFilter;
 import com.spa.springCommuProject.config.login.PrincipalOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomAuthSuccessHandler customAuthSuccessHandler;
+
+    @Autowired
+    private CustomAuthSuccessHandler2 customAuthSuccessHandler2;
 
     @Override
     public void configure(WebSecurity web) {
@@ -66,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService)
                 .and()
-                .successHandler(customAuthSuccessHandler)
+                .successHandler(customAuthSuccessHandler2)
                 .failureHandler(customAuthFailureHandler);
         http.headers()
                 .frameOptions()
