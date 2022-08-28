@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/freepost/{postId}").permitAll()
                 .antMatchers("/api/threepowerpost").permitAll()
                 .antMatchers("/api/threepowerpost/{postId}").permitAll()
-                .antMatchers("/oauth2/authorization/**").permitAll()
+//                .antMatchers("/oauth2/authorization/**").permitAll()
                 .anyRequest().authenticated()
                 ;
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
