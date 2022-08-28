@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.user.service;
 
+import com.spa.springCommuProject.common.exception.JoinException;
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
 import com.spa.springCommuProject.user.domain.BigThreePower;
 import com.spa.springCommuProject.user.domain.Provider;
@@ -40,13 +41,13 @@ public class UserService {
     private void validateDuplicateUser(UserJoinRequest userJoinRequest) {
         User findUser = userRepository.findByNickName(userJoinRequest.getNickName());
         if (findUser!=null) {
-            throw new IllegalStateException("이미 존재하는 닉네임입니다.");
+            throw new JoinException("이미 존재하는 닉네임입니다.");
         }
         if (!userJoinRequest.getPasswordCheck().equals(userJoinRequest.getPassword())){
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다");
+            throw new JoinException("비밀번호가 일치하지 않습니다");
         }
         if (userRepository.findByLoginId(userJoinRequest.getLoginId()).isPresent()) {
-            throw new IllegalStateException("이미 존재하는 아이디입니다.");
+            throw new JoinException("이미 존재하는 아이디입니다.");
         }
     }
 

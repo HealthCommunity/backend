@@ -2,6 +2,7 @@ package com.spa.springCommuProject.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.spa.springCommuProject.common.exception.JoinException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ public class CommonResponse<T> {
 
     public static CommonResponse<?> from(Exception e) {
         CodeAndDetails exceptionData = CodeAndDetails.findByClass(e.getClass());
-        if(exceptionData.getType().equals(IllegalStateException.class)){
+        if(exceptionData.getType().equals(JoinException.class)){
             return new CommonResponse<>(exceptionData.getCode(), e.getMessage(), exceptionData.getType());
         }
         return new CommonResponse<>(exceptionData.getCode(), exceptionData.getMessage(), exceptionData.getType());
