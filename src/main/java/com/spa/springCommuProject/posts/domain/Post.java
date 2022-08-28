@@ -2,6 +2,7 @@ package com.spa.springCommuProject.posts.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.spa.springCommuProject.comment.domain.Comment;
 import com.spa.springCommuProject.file.domain.FileDetail;
 import com.spa.springCommuProject.posts.dto.MainPostResponse;
 import com.spa.springCommuProject.posts.dto.PostDTO;
@@ -55,6 +56,9 @@ public class Post {
 
     @Enumerated(EnumType.STRING)
     private PostCategory postCategory;
+
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     public Post(User user, String title, String content, PostCategory postCategory) {
         this.user = user;
