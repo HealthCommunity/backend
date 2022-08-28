@@ -72,13 +72,20 @@ public class ExercisePostApi {
         return ResponseEntity.ok(CommonResponse.from(postService.findNickNameById(postId)));
     }
 
-    @PostMapping("{postId}/delete")
+    @PostMapping("/{postId}/delete")
     @ApiOperation(value = "운동게시글 삭제")
     public ResponseEntity<Void> deleteExercisePost(@AuthenticationPrincipal PrincipalUserDetails principalUserDetails,
         @PathVariable Long postId) {
         postService.validateUser(postId, principalUserDetails.getUser().getId());
         postService.deletePost(postId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/popular")
+    @ApiOperation(value = "운동게시판 인기순 조회")
+    public ResponseEntity<CommonResponse<List<PostViewDTO>>> exercisePostViewDesc() {
+        List<PostViewDTO> posts = postService.popularExercisePost();
+        return ResponseEntity.ok(CommonResponse.from(posts));
     }
 
 

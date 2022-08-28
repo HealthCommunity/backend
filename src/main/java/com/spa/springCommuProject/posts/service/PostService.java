@@ -242,4 +242,27 @@ public class PostService {
         }
     }
 
+    public List<PostViewDTO> popularExercisePost() {
+        List<PostViewDTO> posts = new ArrayList<>();
+        List<Post> findExercisePosts = postRepository.findByPostCategoryOrderByViewDesc(PostCategory.EXERCISEPOST);
+        if (!findExercisePosts.isEmpty()) {
+            for (Post findExercisePost : findExercisePosts) {
+                if (findExercisePost.getCreatedDate().isAfter(Post.getNow().minusDays(7))) {
+                    if (findExercisePost.getFiles().isEmpty()) {
+                        continue;
+                    } else {
+                        PostViewDTO postViewDTO = findExercisePost.convertToViewDTO();
+                        postViewDTO.setUrls(findExercisePost.getFiles().stream().map(x -> x.getUrl()).collect(Collectors.toList()));
+                        posts.add(postViewDTO);
+                    }
+                }
+                if (posts.size() > 10) {
+                    break;
+                }
+            }
+        }
+
+        return posts;
+    }
+
 }
