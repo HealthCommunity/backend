@@ -5,9 +5,11 @@ import com.spa.springCommuProject.comment.dto.CommentResponseDto;
 import com.spa.springCommuProject.comment.service.CommentService;
 import com.spa.springCommuProject.common.CommonResponse;
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,4 +26,8 @@ public class CommentApi {
         return ResponseEntity.ok(CommonResponse.from(commentService.commentSave(principalUserDetails.getUser(), id, dto)));
     }
 
+    @GetMapping("/api/post/{id}/comments")
+    public ResponseEntity<CommonResponse<List<CommentResponseDto>>> commentList(@PathVariable Long id) {
+        return ResponseEntity.ok(CommonResponse.from(commentService.commentList(id)));
+    }
 }
