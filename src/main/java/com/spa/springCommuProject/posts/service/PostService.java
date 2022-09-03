@@ -256,7 +256,7 @@ public class PostService {
                         posts.add(postViewDTO);
                     }
                 }
-                if (posts.size() > 10) {
+                if (posts.size() > 30) {
                     break;
                 }
             }
