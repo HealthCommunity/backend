@@ -7,6 +7,8 @@ import com.spa.springCommuProject.comment.repository.CommentRepository;
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,5 +31,10 @@ public class CommentService {
         return comment.convertToCommentResponseDto();
     }
 
+    public List<CommentResponseDto> commentList(Long id){
+        Post findPost = postsRepository.getById(id);
+        return findPost.getComments().stream().map(Comment::convertToCommentResponseDto).collect(
+            Collectors.toList());
+    }
 
 }

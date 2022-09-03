@@ -23,10 +23,9 @@ public class CommonResponse<T> {
 
     public static CommonResponse<?> from(Exception e) {
         CodeAndDetails exceptionData = CodeAndDetails.findByClass(e.getClass());
-        if(exceptionData.getType().equals(JoinException.class)){
-            return new CommonResponse<>(exceptionData.getCode(), e.getMessage(), exceptionData.getType());
+        if (e.getMessage().isEmpty()) {
+            return new CommonResponse<>(exceptionData.getCode(), exceptionData.getMessage(), exceptionData.getType());
         }
-        return new CommonResponse<>(exceptionData.getCode(), exceptionData.getMessage(), exceptionData.getType());
+        return new CommonResponse<>(exceptionData.getCode(), e.getMessage(), exceptionData.getType());
     }
-
 }

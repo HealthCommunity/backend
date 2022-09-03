@@ -1,6 +1,8 @@
 package com.spa.springCommuProject.config;
 
 import com.spa.springCommuProject.config.login.CustomAuthFailureHandler;
+import com.spa.springCommuProject.config.login.CustomAuthSuccessHandler;
+import com.spa.springCommuProject.config.login.CustomAuthSuccessHandler2;
 import com.spa.springCommuProject.config.login.JsonUsernamePasswordAuthenticationFilter;
 import com.spa.springCommuProject.config.login.PrincipalOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomAuthFailureHandler customAuthFailureHandler;
 
+    @Autowired
+    private CustomAuthSuccessHandler customAuthSuccessHandler;
+
+    @Autowired
+    private CustomAuthSuccessHandler2 customAuthSuccessHandler2;
+
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
@@ -54,12 +62,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/freepost/{postId}").permitAll()
                 .antMatchers("/api/threepowerpost").permitAll()
                 .antMatchers("/api/threepowerpost/{postId}").permitAll()
+                .antMatchers("/api/post/{id}/comments").permitAll()
                 .anyRequest().authenticated()
                 ;
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         http.oauth2Login()
                 .userInfoEndpoint()
-                .userService(principalOauth2UserService);
+                .userService(principalOauth2UserService)
+                .and()
+                .successHandler(customAuthSuccessHandler2)
+                .failureHandler(customAuthFailureHandler);
         http.headers()
                 .frameOptions()
                 .sameOrigin();
@@ -77,6 +89,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JsonUsernamePasswordAuthenticationFilter filter = new JsonUsernamePasswordAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationFailureHandler(customAuthFailureHandler);
+        filter.setAuthenticationSuccessHandler(customAuthSuccessHandler);
         filter.setFilterProcessesUrl("/api/user/login");
         return filter;
     }
