@@ -3,6 +3,7 @@ package com.spa.springCommuProject.posts.service;
 
 import com.spa.springCommuProject.common.exception.NoThreePowerException;
 import com.spa.springCommuProject.config.login.PrincipalUserDetails;
+import com.spa.springCommuProject.file.domain.FileCategory;
 import com.spa.springCommuProject.file.domain.FileDetail;
 import com.spa.springCommuProject.file.domain.VideoCategory;
 import com.spa.springCommuProject.file.service.FileService;
@@ -46,14 +47,22 @@ public class PostService {
     private void setPostsUrls(List<PostViewDTO> posts) {
         for (PostViewDTO post : posts) {
             List<FileDetail> files = postRepository.findById(post.getPostId()).get().getFiles();
+            ArrayList<String> urls = new ArrayList<>();
+            ArrayList<String> thumbnailUrls = new ArrayList<>();
             if (files.size() == 0) {
-                ArrayList<String> urls = new ArrayList<>();
                 urls.add("https://healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/IMAGE/d6afdfee-401b-418d-a925-9f1b84387a31.png");
-                post.setUrls(urls);
+                thumbnailUrls.add("https://healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/IMAGE/d6afdfee-401b-418d-a925-9f1b84387a31.png");
             } else {
-                List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
-                post.setUrls(urls);
+                for (FileDetail file : files) {
+                    if (file.getFileCategory().equals(FileCategory.THUMBNAIL)) {
+                        thumbnailUrls.add(file.getUrl());
+                        continue;
+                    }
+                    urls.add(file.getUrl());
+                }
             }
+            post.setUrls(urls);
+            post.setThumbnailUrls(thumbnailUrls);
         }
     }
 
@@ -80,7 +89,9 @@ public class PostService {
         if (postRequest.getFiles() != null) {
             urls = fileService.saveFiles(postRequest.getFiles(), post);
         }
-
+        if (postRequest.getThumbnails() != null) {
+            fileService.saveThumbnails(postRequest.getThumbnails(), post);
+        }
         return new PostResponse(post, urls);
     }
 

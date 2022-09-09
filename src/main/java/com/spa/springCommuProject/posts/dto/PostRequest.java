@@ -18,4 +18,6 @@ public class PostRequest {
     private String content;
 
     private List<MultipartFile> files = new ArrayList<>();
+
+    private List<MultipartFile> thumbnails;
 }

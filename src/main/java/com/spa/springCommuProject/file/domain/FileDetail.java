@@ -62,6 +62,22 @@ public class FileDetail {
                 .build();
     }
 
+    public static FileDetail thumbnailMultipartOf(MultipartFile multipartFile, Post post) {
+        final String uploadName = MultipartUtil.createFileUploadFileName();
+        final String format = MultipartUtil.getFormat(multipartFile.getContentType());
+        String formatCategory = FileCategory.THUMBNAIL.name();
+
+        return FileDetail.builder()
+                .uploadFileName(uploadName)
+                .storeFileName(multipartFile.getOriginalFilename())
+                .format(format)
+                .path(MultipartUtil.createPath(uploadName, format, formatCategory))
+                .fileCategory(FileCategory.valueOf(formatCategory))
+                .bytes(multipartFile.getSize())
+                .post(post)
+                .build();
+    }
+
     public static FileDetail multipartOf(MultipartFile multipartFile, Post post, VideoCategory videoCategory) {
         final String uploadName = MultipartUtil.createFileUploadFileName();
         final String format = MultipartUtil.getFormat(multipartFile.getContentType());

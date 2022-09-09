@@ -24,6 +24,8 @@ public class PostViewDTO {
 
     private List<String> urls = new ArrayList<>();
 
+    private List<String> thumbnailUrls = new ArrayList<>();
+
     private String nickname;
 
     private String postCategory;

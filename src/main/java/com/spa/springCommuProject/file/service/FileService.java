@@ -36,6 +36,13 @@ public class FileService {
         return urls;
     }
 
+    @Transactional
+    public void saveThumbnails(List<MultipartFile> thumbnails, Post post) {
+        for (MultipartFile thumbnail : thumbnails) {
+            saveThumbnail(thumbnail, post);
+        }
+    }
+
     private String save(MultipartFile file, Post post, VideoCategory videoCategory) {
         FileDetail fileDetail = FileDetail.multipartOf(file, post, videoCategory);
         fileRepository.save(fileDetail);
@@ -47,6 +54,13 @@ public class FileService {
         FileDetail fileDetail = FileDetail.multipartOf(file, post);
         fileRepository.save(fileDetail);
         amazonS3ResourceStorage.store(fileDetail.getPath(), file);
+        return fileDetail.getUrl();
+    }
+
+    private String saveThumbnail(MultipartFile thumbnail, Post post) {
+        FileDetail fileDetail = FileDetail.thumbnailMultipartOf(thumbnail, post);
+        fileRepository.save(fileDetail);
+        amazonS3ResourceStorage.store(fileDetail.getPath(), thumbnail);
         return fileDetail.getUrl();
     }
 
