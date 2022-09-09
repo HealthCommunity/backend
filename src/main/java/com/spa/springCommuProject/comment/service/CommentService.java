@@ -7,11 +7,12 @@ import com.spa.springCommuProject.comment.repository.CommentRepository;
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.posts.repository.PostRepository;
 import com.spa.springCommuProject.user.domain.User;
-import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,16 @@ public class CommentService {
                 .user(user).build();
         commentRepository.save(comment);
         return comment.convertToCommentResponseDto();
+    }
+
+    @Transactional
+    public void updateComment(Long id, CommentRequestDto commentRequestDto){
+        Comment comment = commentRepository.findById(id).get();
+        comment.update(commentRequestDto);
+    }
+
+    public void deleteComment(Long id){
+        commentRepository.deleteById(id);
     }
 
     public List<CommentResponseDto> commentList(Long id){

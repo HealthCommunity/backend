@@ -1,5 +1,6 @@
 package com.spa.springCommuProject.comment.domain;
 
+import com.spa.springCommuProject.comment.dto.CommentRequestDto;
 import com.spa.springCommuProject.comment.dto.CommentResponseDto;
 import com.spa.springCommuProject.posts.domain.Post;
 import com.spa.springCommuProject.user.domain.User;
@@ -39,5 +40,9 @@ public class Comment {
     public CommentResponseDto convertToCommentResponseDto() {
         DateTimeFormatter myPattern = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         return new CommentResponseDto(this.id, this.comment, Post.getNow().format(myPattern), this.user.getNickName(), this.posts.getId());
+    }
+
+    public void update(CommentRequestDto commentRequestDto){
+        this.comment = commentRequestDto.getComment();
     }
 }

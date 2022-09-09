@@ -63,6 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/threepowerpost").permitAll()
                 .antMatchers("/api/threepowerpost/{postId}").permitAll()
                 .antMatchers("/api/post/{id}/comments").permitAll()
+                .antMatchers("/api/post/{postId}/comments").permitAll()
+                .antMatchers("/api/comment/{commentId}/delete").permitAll()
+                .antMatchers("/api/comment/{commentId}/edit").permitAll()
                 .anyRequest().authenticated()
                 ;
         http.addFilterBefore(getJsonUsernamePasswordAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
