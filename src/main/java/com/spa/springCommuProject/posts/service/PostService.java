@@ -110,6 +110,9 @@ public class PostService {
                 .postCategory(postCategory)
                 .build();
         postRepository.save(post);
+        if (threePostRequest.getThumbnails() != null) {
+            fileService.saveThumbnails(threePostRequest.getThumbnails(), post);
+        }
         String benchUrl = fileService.saveFile(threePostRequest.getBench(), post, VideoCategory.BENCH);
         String squatUrl = fileService.saveFile(threePostRequest.getSquat(), post, VideoCategory.SQUAT);
         String deadUrl = fileService.saveFile(threePostRequest.getDead(), post, VideoCategory.DEAD);
