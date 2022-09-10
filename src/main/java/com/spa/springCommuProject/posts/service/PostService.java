@@ -50,8 +50,8 @@ public class PostService {
             ArrayList<String> urls = new ArrayList<>();
             ArrayList<String> thumbnailUrls = new ArrayList<>();
             if (files.size() == 0) {
-                urls.add("https://healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/IMAGE/d6afdfee-401b-418d-a925-9f1b84387a31.png");
-                thumbnailUrls.add("https://healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/IMAGE/d6afdfee-401b-418d-a925-9f1b84387a31.png");
+                urls.add("https://healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/IMAGE/1da851ed-4667-4e70-a01e-9d3eb59e0916.png");
+                thumbnailUrls.add("https://healthcommunitybucket.s3.ap-northeast-2.amazonaws.com/IMAGE/1da851ed-4667-4e70-a01e-9d3eb59e0916.png");
             } else {
                 for (FileDetail file : files) {
                     if (file.getFileCategory().equals(FileCategory.THUMBNAIL)) {
