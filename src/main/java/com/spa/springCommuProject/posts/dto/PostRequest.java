@@ -19,5 +19,5 @@ public class PostRequest {
 
     private List<MultipartFile> files = new ArrayList<>();
 
-    private List<MultipartFile> thumbnails;
+    private List<MultipartFile> thumbnails = new ArrayList<>();
 }

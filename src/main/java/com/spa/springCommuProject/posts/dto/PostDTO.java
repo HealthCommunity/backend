@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,7 +23,7 @@ public class PostDTO {
 
     private LocalDateTime createdDate;
 
-    private List<MultipartFile> files;
+    private List<MultipartFile> files = new ArrayList<>();
 
     private Long userId;
     private String nickname;

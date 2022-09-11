@@ -5,6 +5,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,5 +24,5 @@ public class ThreePostRequest {
 
     private MultipartFile dead;
 
-    private List<MultipartFile> thumbnails;
+    private List<MultipartFile> thumbnails = new ArrayList<>();
 }
