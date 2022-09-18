@@ -168,7 +168,7 @@ public class PostService {
     public PostResponse findPostById(Long postId, PrincipalUserDetails principalUserDetails) {
         Post post = postRepository.findById(postId).get();
         List<FileDetail> files = post.getFiles();
-        List<String> urls = files.stream().map(x -> x.getUrl()).collect(Collectors.toList());
+        List<String> urls = files.stream().filter(x->!x.getFileCategory().equals(FileCategory.THUMBNAIL)).map(x -> x.getUrl()).collect(Collectors.toList());
         SessionUserResponse sessionUserResponse = authUser(principalUserDetails);
         return new PostResponse(post, urls, sessionUserResponse);
     }
@@ -275,7 +275,6 @@ public class PostService {
                 }
             }
         }
-
         return posts;
     }
 
