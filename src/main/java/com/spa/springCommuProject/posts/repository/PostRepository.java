@@ -23,11 +23,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // findByXXX: XXX 컬럼을 키워드로 검색
     // Containing: 특정 키워드 포함 여부
     //IgnoreCase 키워드는 대소문자 구별을 하지 않는다
-    List<Post> findByTitleContainingIgnoreCase(String title);
+    List<Post> findByTitleContainingIgnoreCaseOrderByCreatedDateDesc(String title);
 
-    List<Post> findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(String title, String content);
+    List<Post> findByContentContainingIgnoreCaseOrTitleContainingIgnoreCaseOrderByCreatedDateDesc(String title, String content);
 
-    List<Post> findByContentContainingIgnoreCase(String content);
+    List<Post> findByContentContainingIgnoreCaseOrderByCreatedDateDesc(String content);
 
     List<Post> findByUser(User user);
 }

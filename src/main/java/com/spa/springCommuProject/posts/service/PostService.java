@@ -122,7 +122,7 @@ public class PostService {
 
     public List<PostViewDTO> searchByTitle(String keyword) {
         List<PostViewDTO> posts = postRepository
-                .findByTitleContainingIgnoreCase(keyword)
+                .findByTitleContainingIgnoreCaseOrderByCreatedDateDesc(keyword)
                 .stream()
                 .map(Post::convertToViewDTO)
                 .collect(Collectors.toList());
@@ -133,7 +133,7 @@ public class PostService {
 
     public List<PostViewDTO> searchByTitleAndContent(String keyword) {
         List<PostViewDTO> posts = postRepository
-                .findByContentContainingIgnoreCaseOrTitleContainingIgnoreCase(keyword, keyword)
+                .findByContentContainingIgnoreCaseOrTitleContainingIgnoreCaseOrderByCreatedDateDesc(keyword, keyword)
                 .stream()
                 .map(Post::convertToViewDTO)
                 .collect(Collectors.toList());
@@ -144,7 +144,7 @@ public class PostService {
 
     public List<PostViewDTO> searchByContent(String keyword) {
         List<PostViewDTO> posts = postRepository
-                .findByContentContainingIgnoreCase(keyword)
+                .findByContentContainingIgnoreCaseOrderByCreatedDateDesc(keyword)
                 .stream()
                 .map(Post::convertToViewDTO)
                 .collect(Collectors.toList());
